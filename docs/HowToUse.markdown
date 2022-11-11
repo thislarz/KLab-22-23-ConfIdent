@@ -24,3 +24,14 @@ In that directory you create a folder named ``.conferencecorpus`` and place the 
 
 Example Path would be:
 ``C:/Users/steve/.conferencecorpus/EventCorpus.db``
+
+### Things to try if ...
+
+#### ... if some package is not imported
+- check if your in the right Python ENV
+- check if all modules are installed
+  - if not try installing all modules found in ``requirements.txt``
+
+#### ... if the terminal can't activate the python ENV
+- if you are using ``cmd`` or ``power shell`` try using ``bash`` instead
+  - can be change in terminal settings in pyCharm
