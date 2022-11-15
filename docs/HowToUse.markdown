@@ -32,6 +32,6 @@ Example Path would be:
 - check if all modules are installed
   - if not try installing all modules found in ``requirements.txt``
 
-#### ... if the terminal can't activate the python ENV
+#### ... if the terminal can't activate the python ENV (Windows)
 - if you are using ``cmd`` or ``power shell`` try using ``bash`` instead
   - can be change in terminal settings in pyCharm
