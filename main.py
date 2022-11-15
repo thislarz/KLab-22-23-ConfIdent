@@ -25,9 +25,10 @@ def query_corpus_db(sql_query: str = None):
     # Try it by writing your own query
     res = sql_db.query(sql_query)
     logger.debug(tabulate(res, headers="keys"))
+    return res
 
 
 # loads the query from the Queries folder and passes it to the query_corpus_db method which executes the query
 query = open("./Queries/query01.sql").read()
-query_corpus_db(query)
+data = query_corpus_db(query)
 
