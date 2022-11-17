@@ -3,7 +3,7 @@
 Let's document Issues here that need to be addessed
 
 --- 
-- e.g this needs to be done
+- evaluate extend of duplicates in a given series
 
 
 # Meeting Notes
