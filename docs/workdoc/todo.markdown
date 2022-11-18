@@ -1,9 +1,14 @@
 # ToDo's   
 
-Let's document Issues here that need to be addessed
+Let's document Issues here that need to be addressed
 
 --- 
 - evaluate extend of duplicates in a given series
+- bei wikidata unser Projekt verlinken
+- CI aufsetzen (Meeting mit Tim?)
+- github nutzen mit Issues und Discussions (ist Wolfgang wohl wichtig)
+- simple justpy Oberfläche einbauen als Übung (simple Website mit Navigationsleiste um Ergebnisse visuell präsentieren zu können)
+- jp.justpy in Methode einpacken und nicht einfach am Ende
 
 
 # Meeting Notes
