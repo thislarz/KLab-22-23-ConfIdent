@@ -39,7 +39,35 @@ def replace_var_in_sql(sql, var, text):
     return sql.replace(temp_var, text)
 
 
-# retrives the eventInSeriesId's (unique) from wikidata
+def get_entries_for_series_id(series_id):
+    res = []
+
+    temp_query = open("./Queries/query02.sql").read()
+    temp_query = replace_var_in_sql(temp_query, "var2", i)
+
+    res = query_corpus_db(temp_query)
+
+    res = remove_duplicates(res)
+    res = [series_id] + res
+
+    return res
+
+
+def remove_duplicates(element_list):
+    prev = 0
+    removal_list = []
+    for i in range(1, len(element_list)):
+        if element_list[prev] == element_list[i]:
+            removal_list.append(element_list[i])
+        prev = i
+
+    for i in removal_list:
+        element_list.remove(i)
+
+    return element_list
+
+
+# retrieves the eventInSeriesId's (unique) from wikidata
 query = open("./Queries/getEventInSeriesId.sql").read()
 eventSeriesId_list = query_corpus_db(query)
 
@@ -51,15 +79,34 @@ for i in range(0, len(eventSeriesId_list)):
 seriesList = []
 # for every SeriesId all events with that id are returned and saved in a corresponding list
 for i in eventSeriesId_list:
+
     if type(i) == str:
-        temp_query = open("./Queries/query02.sql").read()
-        temp_query = replace_var_in_sql(temp_query, "var2", i)
-        seriesList.append(query_corpus_db(temp_query))
+        seriesList.append(get_entries_for_series_id(i))
     else:
         eventSeriesId_list.remove(i)
 
 # logger.debug(tabulate(seriesList, headers="keys"))
 
+
 # count number of events per series
+count_total_entries = 0
+count_len_max3 = 0
+count_len_min10 = 0
+count_homepage = 0
 for i in seriesList:
-    print(len(i), " : ", i)
+    print(len(i)-1, " : ", i)
+    count_total_entries += len(i)-1
+    if len(i)-1 <= 3:
+        count_len_max3 += 1
+    elif len(i)-1 >= 10:
+        count_len_min10 += 1
+
+    if i[1]['homepage'] is not None:
+        count_homepage += 1
+
+avg_series_length = count_total_entries / len(seriesList)
+print("avg_series_length", avg_series_length)
+print("series with 3 or less: ", count_len_max3, str(count_len_max3/len(seriesList)*100)+"%")
+print("series with 10 or more: ", count_len_min10,  str(count_len_min10/len(seriesList)*100)+"%")
+print("number of series: ", len(seriesList))
+print("series with homepage: ", count_homepage, str(count_homepage/len(seriesList)*100)+"%")
