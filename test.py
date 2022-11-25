@@ -1,9 +1,11 @@
 # Plan:
 # 1. Funktion bekommt SerienID und gibt Einträge der Vorjahre zurück (gibt Liste) CHECK
+
 # 2. Funktion bekommt Liste von Events einer Serie und gibt nächstes Event zurück CHECK
+
 # 3. Funktion -> Gegeben ein Event, prüft ob Homepage existiert und gibt <title> zurück (noch nicht) (CHECK???)
 
-# 4. prüfen ob <title> = event name (soll kleine Unterschiede erkennen können)
+# 4. prüfen ob <title> = event name (soll kleine Unterschiede erkennen können) CHECK
 #
 #
 from utils import *
@@ -16,8 +18,8 @@ logger.setLevel(DEBUG)
 logger.addHandler(StreamHandler(sys.stdout))
 
 # print(get_events_by_series_id("Q18353514"))
-logger.debug(tabulate(get_events_by_series_id("Q1961016"), headers="keys")) #Q1961016, Q18353514
-events = get_events_by_series_id("Q1961016")
+logger.debug(tabulate(get_events_by_series_id("Q18353514"), headers="keys")) #Q1961016, Q18353514
+events = get_events_by_series_id("Q18353514")
 
 
 def anticipated_year_of_next_event(list_of_events):
