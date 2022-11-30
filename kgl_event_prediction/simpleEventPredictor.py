@@ -6,8 +6,7 @@
 # 3. Funktion -> Gegeben ein Event, prüft ob Homepage existiert und gibt <title> zurück (noch nicht) (CHECK???)
 
 # 4. prüfen ob <title> = event name (soll kleine Unterschiede erkennen können) CHECK
-#
-#
+
 from kgl_event_prediction.utils import *
 from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
@@ -47,6 +46,7 @@ Cases:
 3. last 2 digits of year
 4. roman numerals (very important)
 """
+
 
 def create_anticipated_event(preceding, next_year):
     title = ""
