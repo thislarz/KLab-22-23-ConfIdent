@@ -28,7 +28,7 @@ def get_events_by_series_id(id):
     use query that takes id as an argument and returns all events of that series
     """
     id = str(id)
-    query = open("./Queries/getEventsBySeriesId.sql").read()
+    query = open("resources/Queries/getEventsBySeriesId.sql").read()
     query = query.replace("$VARIABLE1", id)
     events = query_corpus_db(query)
     events = remove_duplicates(events)

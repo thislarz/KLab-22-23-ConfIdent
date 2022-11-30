@@ -42,7 +42,7 @@ def replace_var_in_sql(sql, var, text):
 def get_entries_for_series_id(series_id):
     res = []
 
-    temp_query = open("Queries/extractSeriesById2.sql").read()
+    temp_query = open("resources/Queries/extractSeriesById2.sql").read()
     temp_query = replace_var_in_sql(temp_query, "var2", series_id)
     res = query_corpus_db(temp_query)
 
@@ -95,7 +95,7 @@ def analytics(seriesList):
 
 
 # retrieves the eventInSeriesId's (unique) from wikidata
-query = open("./Queries/getEventInSeriesId.sql").read()
+query = open("resources/Queries/getEventInSeriesId.sql").read()
 eventSeriesId_list = query_corpus_db(query)
 
 # convert query results from dict with one entry to strings

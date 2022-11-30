@@ -8,7 +8,7 @@
 # 4. prüfen ob <title> = event name (soll kleine Unterschiede erkennen können) CHECK
 #
 #
-from utils import *
+from kgl_event_prediction.utils import *
 from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
 import sys

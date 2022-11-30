@@ -25,7 +25,7 @@ Let's document Issues here that need to be addressed
 
 ### Lars   
 - [ ] render tables from python
-- [ ] manually explore data and look for patterns (theorize possible crawler) //write Tasja when working on this
+- [x] manually explore data and look for patterns (theorize possible crawler) //write Tasja when working on this
 - [x] beautifying this doc :)
 
 ### Tasja
