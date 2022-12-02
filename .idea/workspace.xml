@@ -2,14 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="01c9b1bd-8951-489a-95ed-f05317876c31" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/BaseTest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/utilsTest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/extractSeriesById.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/extractSeriesById2.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/getEventsBySeriesId.sql" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/getEventsBySeriesId.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/seriesAnalysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/seriesAnalysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/install" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/install" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/test" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/test" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/Learning Space/query02.sql" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/resources/queries/learning_space/query02.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/getEventInSeriesId.sql" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/resources/queries/getEventInSeriesId.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/getEventsBySeriesId.sql" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/resources/queries/getEventsBySeriesId.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kgl_event_prediction/resources/Queries/query01.sql" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/resources/queries/query01.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kgl_event_prediction/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/kgl_event_prediction/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utilsTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testutilsTest.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +96,8 @@
       <workItem from="1669299010664" duration="9046000" />
       <workItem from="1669386340246" duration="1010000" />
       <workItem from="1669800752439" duration="3402000" />
-      <workItem from="1669804539313" duration="5849000" />
+      <workItem from="1669804539313" duration="5970000" />
+      <workItem from="1669988912758" duration="1242000" />
     </task>
     <servers />
   </component>
@@ -115,10 +118,10 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$utils.coverage" NAME="utils Coverage Results" MODIFIED="1669811703259" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
     <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$main_new_.coverage" NAME="main(new) Coverage Results" MODIFIED="1668181346600" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$seriesAnalysis.coverage" NAME="seriesAnalysis Coverage Results" MODIFIED="1669811715508" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$seriesAnalysis.coverage" NAME="seriesAnalysis Coverage Results" MODIFIED="1669990414088" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
     <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$openDBinBrowser.coverage" NAME="openDBinBrowser Coverage Results" MODIFIED="1669804885588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
     <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$.coverage" NAME=" Coverage Results" MODIFIED="1669809369150" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$main.coverage" NAME="main Coverage Results" MODIFIED="1668690872235" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$simpleEventPredictor.coverage" NAME="simpleEventPredictor Coverage Results" MODIFIED="1669811304850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$simpleEventPredictor.coverage" NAME="simpleEventPredictor Coverage Results" MODIFIED="1669990407593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
   </component>
 </project>

@@ -31,7 +31,7 @@ def get_events_by_series_id(series_id: str):
     use query that takes id as an argument and returns all events of that series
     """
     series_id = str(series_id)
-    query = open("resources/Queries/getEventsBySeriesId.sql").read()
+    query = open("resources/queries/getEventsBySeriesId.sql").read()
     query = replace_var_in_sql(query, "VARIABLE1", series_id)
     events = query_corpus_db(query)
     events = remove_duplicates(events)
@@ -43,7 +43,7 @@ def get_all_unique_series_ids():
     """
     :return: list of all wikidata events as list of strings
     """
-    query = open("resources/Queries/getEventInSeriesId.sql").read()
+    query = open("resources/queries/getEventInSeriesId.sql").read()
     event_series_id_list = query_corpus_db(query)
 
     # convert query results from dict with one entry to strings
