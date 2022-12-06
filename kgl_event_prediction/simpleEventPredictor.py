@@ -6,12 +6,13 @@
 # 3. Funktion -> Gegeben ein Event, prüft ob Homepage existiert und gibt <title> zurück (noch nicht) (CHECK???)
 
 # 4. prüfen ob <title> = event name (soll kleine Unterschiede erkennen können) CHECK
-#
-#
+
 from kgl_event_prediction.utils import *
 from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
 import sys
+from bs4 import BeautifulSoup
+import requests
 
 logger = Logger(name="Steve")
 logger.setLevel(DEBUG)
@@ -48,6 +49,7 @@ Cases:
 4. roman numerals (very important)
 """
 
+
 def create_anticipated_event(preceding, next_year):
     title = ""
     homepage = ""
@@ -66,8 +68,11 @@ def create_anticipated_event(preceding, next_year):
     return anticipated_event
 
 
-def magic():
-    return "NeurIPS 2021"
+def magic(url):
+    res = requests.get(url)
+    event_page = BeautifulSoup(res.text, "html.parser")
+    event_name = event_page.title  # returns first element with the tag title
+    return event_name.string
 
 
 def is_title_valid(title, event):
@@ -81,7 +86,30 @@ def is_title_valid(title, event):
 
 next_year = anticipated_year_of_next_event(events)
 next_event = create_anticipated_event(events[0], next_year)
+next_event_web_title = magic(next_event["homepage"])
 
 print(next_event)
-print(is_title_valid(magic(), next_event))
+print(next_event_web_title)
+print(is_title_valid(next_event_web_title, next_event))
 
+
+
+
+
+
+
+
+
+# If you have a html file in your project
+# with open("website.html", "r") as f:  # f is a file
+#    doc = BeautifulSoup(f, "html.parser")
+
+# If you have only the url
+# url = "https://2021.emnlp.org/"
+# res = requests.get(url)
+# event_page = BeautifulSoup(res.text, "html.parser")
+
+# event_name = event_page.title  # returns first element with the tag title
+# print(event_name.string)
+
+# print(event_page.prettify())  # very nice

@@ -1,81 +1,30 @@
 from logging import Logger, DEBUG, StreamHandler
-from lodstorage.sql import SQLDB
 from tabulate import tabulate
 import sys
-from os.path import expanduser
-home = expanduser("~")
+from utils import *
 
 logger = Logger(name="Steve")
 logger.setLevel(DEBUG)
 logger.addHandler(StreamHandler(sys.stdout))
 
 
-def query_corpus_db(sql_query: str = None):
+def all_series_analytics():
     """
-    Prints the result of a direct query to the database
+    :print: analytic data for the series in the console
     """
-    if sql_query is None:
-        sql_query = "SELECT * FROM event LIMIT 5"
+    id_list = get_all_unique_series_ids()
+    series_list = []
 
-    # specifies file location of the Database
-    db_file = home+"/.conferencecorpus/EventCorpus.db"
-    sql_db = SQLDB(dbname=db_file)
+    for i in id_list:
+        temp = get_events_by_series_id(i)
+        temp = [i] + temp
+        series_list.append(temp)
 
-    # now we can directly query the EventCorpus.db abd get LoDs (List of Dicts) as result
-    # Try it by writing your own query
-    res = sql_db.query(sql_query)
-    #logger.debug(tabulate(res, headers="keys"))
-    return res
-
-
-def replace_var_in_sql(sql, var, text):
-    """
-    :param sql: sql-query string that should be modified
-    :param var: name of the variable that should be replaced
-    :param text: string the variable should be replaced with
-    :return: modified query
-    """
-    temp_var = "<"+str(var)+">"
-    return sql.replace(temp_var, str(text))
-
-
-def get_entries_for_series_id(series_id):
-    res = []
-
-    temp_query = open("resources/Queries/extractSeriesById2.sql").read()
-    temp_query = replace_var_in_sql(temp_query, "var2", series_id)
-    res = query_corpus_db(temp_query)
-
-    res = remove_duplicates(res)
-    res = [series_id] + res
-
-    return res
-
-
-def remove_duplicates(element_list):
-    prev = 0
-    removal_list = []
-    for i in range(1, len(element_list)):
-        if element_list[prev] == element_list[i]:
-            removal_list.append(element_list[i])
-        prev = i
-
-    for i in removal_list:
-        element_list.remove(i)
-
-    return element_list
-
-
-def analytics(seriesList):
-    """
-    :param seriesList: a list of series with the first entry consisting of the series id
-    :print analytic data for the series in the console
-    """
     count_total_entries = 0
     count_len_max3 = 0
     count_len_min10 = 0
     count_homepage = 0
-    for i in seriesList:
+    for i in series_list:
         print(len(i) - 1, " : ", i)
         count_total_entries += len(i) - 1
         if len(i) - 1 <= 3:
@@ -83,39 +32,19 @@ def analytics(seriesList):
         elif len(i) - 1 >= 10:
             count_len_min10 += 1
 
-        if i[1]['homepage'] is not None:
+        if len(i) > 1 and i[1]['homepage'] is not None:
             count_homepage += 1
 
-    avg_series_length = count_total_entries / len(seriesList)
+    avg_series_length = count_total_entries / len(series_list)
     print("avg_series_length", avg_series_length)
-    print("series with 3 or less: ", count_len_max3, str(count_len_max3 / len(seriesList) * 100) + "%")
-    print("series with 10 or more: ", count_len_min10, str(count_len_min10 / len(seriesList) * 100) + "%")
-    print("number of series: ", len(seriesList))
-    print("series with homepage: ", count_homepage, str(count_homepage / len(seriesList) * 100) + "%")
+    print("series with 3 or less: ", count_len_max3, str(count_len_max3 / len(series_list) * 100) + "%")
+    print("series with 10 or more: ", count_len_min10, str(count_len_min10 / len(series_list) * 100) + "%")
+    print("number of series: ", len(series_list))
+    print("series with homepage: ", count_homepage, str(count_homepage / len(series_list) * 100) + "%")
 
 
-# retrieves the eventInSeriesId's (unique) from wikidata
-query = open("resources/Queries/getEventInSeriesId.sql").read()
-eventSeriesId_list = query_corpus_db(query)
-
-# convert query results from dict with one entry to strings
-for i in range(0, len(eventSeriesId_list)):
-    eventSeriesId_list[i] = eventSeriesId_list[i]['eventInSeriesId']
-
-
-seriesList = []
-# for every SeriesId all events with that id are returned and saved in a corresponding list
+all_series_analytics()
 """
-for i in eventSeriesId_list:
-    if type(i) == str:
-        seriesList.append(get_entries_for_series_id(i))
-    else:
-        eventSeriesId_list.remove(i)
-
-analytics(seriesList)
-"""
-# logger.debug(tabulate(seriesList, headers="keys"))
-
 # gets a specific series and prints its entries
 series_Id_1 = "Q6053150"
 series_Id_2 = "Q1961016"
@@ -123,10 +52,10 @@ series_Id_3 = "Q3570023"
 series_Id_4 = "Q17012957"
 series_Id_5 = "Q18353514"
 
-series1 = get_entries_for_series_id(series_Id_5)
+series1 = get_events_by_series_id(series_Id_5)
 for i in series1:
     print(i)
-
+"""
 
 
 

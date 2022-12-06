@@ -30,7 +30,7 @@ jobs:
     - name: Install python dependencies
       run: |
         python -m pip install --upgrade pip
-        scripts/install
+        bash scripts/install
     - name: Run tests
       run: |
-        scripts/test
+        bash scripts/test
