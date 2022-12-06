@@ -1,0 +1,19 @@
+name = "KLab-22-23-ConfIdent"
+
+version = "0.1.0"
+
+description = "Prediction of future Events."
+
+authors = [
+    "Lars Kudlik",
+    "Edwin Özdemir",
+    "Tasja Arriens"]
+
+dependencies = [
+    # ConferenceCorpus >=0.0.38
+    'ConferenceCorpus~=0.0.38',
+    # tabulate
+    'tabulate',
+    # sqlite-web
+    'sqlite-web'
+]

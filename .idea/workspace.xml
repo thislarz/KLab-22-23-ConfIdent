@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="01c9b1bd-8951-489a-95ed-f05317876c31" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2HPBhSUn0gMb40CiryBy2BXwSYY" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kudli/Documents/GitHub/KLab-22-23-ConfIdent&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;RunConfigurationTargetLRU&quot;: [
+      &quot;b4619d32-2f95-459a-8446-5633a2297758&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kudli\Documents\GitHub\KLab-22-23-ConfIdent\kgl_event_prediction" />
+      <recent name="C:\Users\kudli\Documents\GitHub\KLab-22-23-ConfIdent\Queries" />
+      <recent name="C:\Users\kudli\Documents\GitHub\KLab-22-23-ConfIdent" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kudli\Documents\GitHub\KLab-22-23-ConfIdent\kgl_event_prediction" />
+      <recent name="C:\Users\kudli\Documents\GitHub\KLab-22-23-ConfIdent\tests" />
+      <recent name="C:\Users\kudli\Documents\GitHub\KLab-22-23-ConfIdent\kgl_event_prediction\resources" />
+      <recent name="C:\Users\kudli\Documents\GitHub\KLab-22-23-ConfIdent\DataBase" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="query01.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+      <script-file value="$PROJECT_DIR$/Queries/query01.sql" />
+      <script-mode>FILE</script-mode>
+      <data-source id="b4619d32-2f95-459a-8446-5633a2297758" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="01c9b1bd-8951-489a-95ed-f05317876c31" name="Changes" comment="" />
+      <created>1668176956609</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1668176956609</updated>
+      <workItem from="1668176957783" duration="9326000" />
+      <workItem from="1668339263413" duration="1079000" />
+      <workItem from="1668437624024" duration="193000" />
+      <workItem from="1668525943790" duration="4910000" />
+      <workItem from="1668690379622" duration="3120000" />
+      <workItem from="1668693515275" duration="70000" />
+      <workItem from="1668693586578" duration="509000" />
+      <workItem from="1668949302377" duration="9227000" />
+      <workItem from="1669040800091" duration="1395000" />
+      <workItem from="1669135786607" duration="2521000" />
+      <workItem from="1669200706790" duration="48000" />
+      <workItem from="1669299010664" duration="9046000" />
+      <workItem from="1669386340246" duration="1010000" />
+      <workItem from="1669800752439" duration="3402000" />
+      <workItem from="1669804539313" duration="5970000" />
+      <workItem from="1669988912758" duration="2295000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$utils.coverage" NAME="utils Coverage Results" MODIFIED="1669811703259" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$main_new_.coverage" NAME="main(new) Coverage Results" MODIFIED="1668181346600" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$seriesAnalysis.coverage" NAME="seriesAnalysis Coverage Results" MODIFIED="1669990414088" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$openDBinBrowser.coverage" NAME="openDBinBrowser Coverage Results" MODIFIED="1669804885588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$.coverage" NAME=" Coverage Results" MODIFIED="1669809369150" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$main.coverage" NAME="main Coverage Results" MODIFIED="1668690872235" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/KLab_22_23_ConfIdent$simpleEventPredictor.coverage" NAME="simpleEventPredictor Coverage Results" MODIFIED="1669990407593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/kgl_event_prediction" />
+  </component>
+</project>

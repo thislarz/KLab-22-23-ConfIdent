@@ -28,6 +28,6 @@ def query_corpus_db(sql_query: str = None):
     return res
 
 
-# loads the query from the Queries folder and passes it to the query_corpus_db method which executes the query
-query = open("./Queries/getEventInSeriesId.sql").read()
+# loads the query from the queries folder and passes it to the query_corpus_db method which executes the query
+query = open("resources/queries/getEventInSeriesId.sql").read()
 data = query_corpus_db(query)
