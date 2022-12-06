@@ -32,7 +32,7 @@ def all_series_analytics():
         elif len(i) - 1 >= 10:
             count_len_min10 += 1
 
-        if len(i) > 1 and i[1]['homepage'] is not None:
+        if len(i) > 1 and i[1].homepage is not None:
             count_homepage += 1
 
     avg_series_length = count_total_entries / len(series_list)

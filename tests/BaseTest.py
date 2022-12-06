@@ -16,11 +16,11 @@ class Basetest(TestCase):
         self.debug = debug
         self.profile = profile
         msg = f"test {self._testMethodName}, debug={self.debug}"
-        #self.profiler = Profiler(msg, profile=self.profile)
+        # self.profiler = Profiler(msg, profile=self.profile)
 
     def tearDown(self):
         TestCase.tearDown(self)
-        #self.profiler.time()
+        # self.profiler.time()
 
     @staticmethod
     def inPublicCI():

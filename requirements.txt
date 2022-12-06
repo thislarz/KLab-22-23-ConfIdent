@@ -1,3 +1,5 @@
 ConferenceCorpus >=0.0.38
 tabulate
 sqlite-web
+beautifulsoup4
+requests

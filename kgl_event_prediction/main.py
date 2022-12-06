@@ -1,33 +1,29 @@
+#
+# Use this file to run code
+#
+#
 from logging import Logger, DEBUG, StreamHandler
-from lodstorage.sql import SQLDB
 from tabulate import tabulate
 import sys
-from os.path import expanduser
-home = expanduser("~")
+from kgl_event_prediction.utils import *
+from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
+from kgl_event_prediction.eventEvaluator import EventEvaluator
 
+# sets up the Logger
 logger = Logger(name="Steve")
 logger.setLevel(DEBUG)
 logger.addHandler(StreamHandler(sys.stdout))
 
+# defined variables for easy experimenting
+seriesId_1 = "Q1961016"
+seriesId_2 = "Q18353514"
 
-def query_corpus_db(sql_query: str = None):
-    """
-    Prints the result of a direct query to the database
-    """
-    if sql_query is None:
-        sql_query = "SELECT * FROM event LIMIT 5"
+# code of interest
+event_predictor = SimpleEventPredictor(seriesId_2)
+event = event_predictor.get_next_event()
 
-    # specifies file location of the Database
-    db_file = home+"/.conferencecorpus/EventCorpus.db"
-    sql_db = SQLDB(dbname=db_file)
+logger.debug(tabulate([event], headers="keys"))
 
-    # now we can directly query the EventCorpus.db abd get LoDs (List of Dicts) as result
-    # Try it by writing your own query
-    res = sql_db.query(sql_query)
-    logger.debug(tabulate(res, headers="keys"))
-    return res
-
-
-# loads the query from the queries folder and passes it to the query_corpus_db method which executes the query
-query = open("resources/queries/getEventInSeriesId.sql").read()
-data = query_corpus_db(query)
+confEvent = EventEvaluator(event).is_title_valid()
+print(EventEvaluator.get_title_from_url(event.homepage), "<-> web title")
+print(confEvent, "<-> is title valid? ")

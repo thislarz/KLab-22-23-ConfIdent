@@ -7,7 +7,8 @@ description = "Prediction of future Events."
 authors = [
     "Lars Kudlik",
     "Edwin Özdemir",
-    "Tasja Arriens"]
+    "Tasja Arriens"
+]
 
 dependencies = [
     # ConferenceCorpus >=0.0.38
@@ -15,5 +16,7 @@ dependencies = [
     # tabulate
     'tabulate',
     # sqlite-web
-    'sqlite-web'
+    'sqlite-web',
+    'beautifulsoup4',
+    'requests'
 ]

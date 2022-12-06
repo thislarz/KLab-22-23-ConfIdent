@@ -1,5 +1,6 @@
 from lodstorage.sql import SQLDB
 from os.path import expanduser
+from kgl_event_prediction.event import Event
 home = expanduser("~")
 
 
@@ -33,10 +34,14 @@ def get_events_by_series_id(series_id: str):
     series_id = str(series_id)
     query = open("resources/queries/getEventsBySeriesId.sql").read()
     query = replace_var_in_sql(query, "VARIABLE1", series_id)
-    events = query_corpus_db(query)
-    events = remove_duplicates(events)
-    return events
+    res = query_corpus_db(query)
+    res = remove_duplicates(res)
 
+    # translate queried Events into python Event objects
+    events = []
+    for queried_event in res:
+        events.append(convert_to_event(queried_event))
+    return events
 
 
 def get_all_unique_series_ids():
@@ -51,6 +56,19 @@ def get_all_unique_series_ids():
         event_series_id_list[i] = event_series_id_list[i]['eventInSeriesId']
 
     return event_series_id_list
+
+
+def convert_to_event(queried_event: dict):
+    """
+    :param queried_event: is an event as queried from the database
+    :return: an Event object with the same values as the queried event
+    """
+    title = queried_event['title']
+    homepage = queried_event['homepage']
+    year = queried_event['year']
+    acronym = queried_event['acronym']
+    event = Event(title, homepage, year, acronym)
+    return event
 
 
 def replace_var_in_sql(sql: str, var: str, text: str):
