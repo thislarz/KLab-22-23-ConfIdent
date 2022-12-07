@@ -1,16 +1,22 @@
+from kgl_event_prediction.eventEvaluator import EventEvaluator
+from kgl_event_prediction.eventPredictor import EventPredictor
 from kgl_event_prediction.utils import *
 from kgl_event_prediction.event import Event
 
 
-class SimpleEventPredictor(object):
+class SimpleEventPredictor(EventPredictor):
     """
     Simple Event Predictor is used to guess events of a series
     """
     def __init__(self, series_id: str):
-        self.series_id = series_id
+        super().__init__(series_id)
         self.series_list = get_events_by_series_id(self.series_id)
-        self.anticipated_next_year = self.anticipate_year_of_next_event(self.series_list)
-        self.predicted_next_event = self.predict_next_event(self.series_list[0], self.anticipated_next_year)
+        try:
+            self.anticipated_next_year = self.anticipate_year_of_next_event(self.series_list)
+            self.predicted_next_event = self.predict_next_event(self.series_list[0], self.anticipated_next_year)
+        except:
+            self.anticipated_next_year = 0
+            self.predicted_next_event = None
 
     def anticipate_year_of_next_event(self, list_of_events: list):
         year1 = list_of_events[0].year
@@ -46,9 +52,20 @@ class SimpleEventPredictor(object):
         preceding_year = str(proceeding.year)
         year = str(next_year)
 
-        title = proceeding.title.replace(preceding_year, year)
-        homepage = proceeding.homepage.replace(preceding_year, year)
-        acronym = proceeding.acronym.replace(preceding_year, year)
+        try:
+            title = proceeding.title.replace(preceding_year, year)
+        except:
+            title = ""
+
+        try:
+            homepage = proceeding.homepage.replace(preceding_year, year)
+        except:
+            homepage = ""
+
+        try:
+            acronym = proceeding.acronym.replace(preceding_year, year)
+        except:
+            acronym = ""
 
         anticipated_event = Event(title, homepage, year, acronym)
 
@@ -59,6 +76,11 @@ class SimpleEventPredictor(object):
 
     def get_anticipated_next_year(self):
         return self.anticipated_next_year
+
+    def get_summary(self):
+        event_evaluator = EventEvaluator(self.predicted_next_event)
+        return event_evaluator.is_title_valid()
+
 
 
 # If you have a html file in your project

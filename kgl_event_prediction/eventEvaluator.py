@@ -16,9 +16,14 @@ class EventEvaluator(object):
         return event_name.string
 
     def is_title_valid(self):
-        web_title = self.get_title_from_url(self.event.homepage)
-        if self.event.title.find(web_title) != -1 or web_title.find(self.event.title) != -1:
-            return True
-
-        return False
-
+        if self.event.homepage is None or self.event.homepage == "":
+            return False
+        else:
+            try:
+                web_title = self.get_title_from_url(self.event.homepage)
+            except:
+                return False
+            if web_title is None or web_title == "":
+                return False
+            elif self.event.title.find(web_title) != -1 or web_title.find(self.event.title) != -1:
+                return True

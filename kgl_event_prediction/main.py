@@ -5,6 +5,8 @@
 from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
 import sys
+
+from kgl_event_prediction.seriesAnalysis import SeriesAnalysis
 from kgl_event_prediction.utils import *
 from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
 from kgl_event_prediction.eventEvaluator import EventEvaluator
@@ -27,3 +29,6 @@ logger.debug(tabulate([event], headers="keys"))
 confEvent = EventEvaluator(event).is_title_valid()
 print(EventEvaluator.get_title_from_url(event.homepage), "<-> web title")
 print(confEvent, "<-> is title valid? ")
+
+seriesAnalysis = SeriesAnalysis()
+seriesAnalysis.rate_event_prediction()
