@@ -5,12 +5,6 @@ version = "0.1.0"
 
 description = "Prediction of future Events."
 
-authors = [
-    {author = "Lars Kudlik"},
-    {author = "Edwin Özdemir"},
-    {author = "Tasja Arriens"},
-]
-
 dependencies = [
     # ConferenceCorpus >=0.0.38
     'ConferenceCorpus~=0.0.38',
