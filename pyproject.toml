@@ -18,5 +18,7 @@ dependencies = [
     # sqlite-web
     'sqlite-web',
     'beautifulsoup4',
-    'requests'
+    'requests',
+    # is corpus included in ConferenceCorpus?
+    'corpus'
 ]
