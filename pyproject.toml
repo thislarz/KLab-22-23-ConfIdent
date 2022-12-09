@@ -6,9 +6,9 @@ version = "0.1.0"
 description = "Prediction of future Events."
 
 authors = [
-    "Lars Kudlik",
-    "Edwin Özdemir",
-    "Tasja Arriens",
+    {author = "Lars Kudlik"},
+    {author = "Edwin Özdemir"},
+    {author = "Tasja Arriens"},
 ]
 
 dependencies = [
