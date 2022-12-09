@@ -8,7 +8,7 @@ description = "Prediction of future Events."
 authors = [
     "Lars Kudlik",
     "Edwin Özdemir",
-    "Tasja Arriens"
+    "Tasja Arriens",
 ]
 
 dependencies = [
@@ -21,5 +21,5 @@ dependencies = [
     'beautifulsoup4',
     'requests',
     # is corpus included in ConferenceCorpus?
-    'corpus'
+    'corpus',
 ]
