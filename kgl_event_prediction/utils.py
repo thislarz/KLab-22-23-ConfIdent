@@ -67,7 +67,7 @@ def convert_to_event(queried_event: dict):
     homepage = queried_event['homepage']
     year = queried_event['year']
     acronym = queried_event['acronym']
-    event = Event(title, homepage, year, acronym)
+    event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
     return event
 
 

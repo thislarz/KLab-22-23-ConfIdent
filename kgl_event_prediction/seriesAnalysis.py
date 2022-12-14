@@ -47,7 +47,7 @@ class SeriesAnalysis(object):
         print("number of series: ", len(self.series_list))
         print("series with homepage: ", count_homepage, str(count_homepage / len(self.series_list) * 100) + "%")
 
-    def rate_event_prediction(self):
+    def rate_event_prediction(self, event_predictor: EventPredictor):
         """
         - input: EventPredictor
         - output: IDs, predicted event, and summary (title, homepage, acronym, confidence...)
@@ -58,7 +58,8 @@ class SeriesAnalysis(object):
         count_success = 0
         for i in self.id_list:
             count_events += 1
-            event_predictor = SimpleEventPredictor(i)
+            # event_predictor = SimpleEventPredictor(i)
+            event_predictor.initialize(i)
             next_event = event_predictor.get_next_event()
             if next_event is None:
                 continue

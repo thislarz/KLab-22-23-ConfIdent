@@ -8,8 +8,11 @@ class SimpleEventPredictor(EventPredictor):
     """
     Simple Event Predictor is used to guess events of a series
     """
-    def __init__(self, series_id: str):
-        super().__init__(series_id)
+    def __init__(self):
+        super().__init__()
+
+    def initialize(self, series_id: str):
+        self.series_id = series_id
         self.series_list = get_events_by_series_id(self.series_id)
         try:
             self.anticipated_next_year = self.anticipate_year_of_next_event(self.series_list)
@@ -67,7 +70,7 @@ class SimpleEventPredictor(EventPredictor):
         except:
             acronym = ""
 
-        anticipated_event = Event(title, homepage, year, acronym)
+        anticipated_event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
 
         return anticipated_event
 

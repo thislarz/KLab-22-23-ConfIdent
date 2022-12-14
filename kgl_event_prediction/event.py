@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-
+from typing import Optional
 
 @dataclass
 class Event:
     title: str
-    homepage: str
     year: int
     acronym: str
+    homepage: Optional[str] = ""

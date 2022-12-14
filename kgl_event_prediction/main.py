@@ -21,7 +21,8 @@ seriesId_1 = "Q1961016"
 seriesId_2 = "Q18353514"
 
 # code of interest
-event_predictor = SimpleEventPredictor(seriesId_2)
+event_predictor = SimpleEventPredictor()
+event_predictor.initialize("Q18353514")
 event = event_predictor.get_next_event()
 
 logger.debug(tabulate([event], headers="keys"))
@@ -31,4 +32,6 @@ print(EventEvaluator.get_title_from_url(event.homepage), "<-> web title")
 print(confEvent, "<-> is title valid? ")
 
 seriesAnalysis = SeriesAnalysis()
-seriesAnalysis.rate_event_prediction()
+simple_ev = SimpleEventPredictor()
+seriesAnalysis.rate_event_prediction(event_predictor=simple_ev)
+

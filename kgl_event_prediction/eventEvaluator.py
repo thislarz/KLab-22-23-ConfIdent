@@ -10,7 +10,12 @@ class EventEvaluator(object):
 
     @staticmethod
     def get_title_from_url(url):
-        res = requests.get(url)
+        if url is None or url == "":
+            return None
+        try:
+            res = requests.get(url)
+        except:
+            return None
         event_page = BeautifulSoup(res.text, "html.parser")
         event_name = event_page.title  # returns first element with the tag title
         return event_name.string
