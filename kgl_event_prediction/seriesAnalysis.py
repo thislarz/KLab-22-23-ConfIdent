@@ -2,6 +2,7 @@ from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
 import sys
 
+from kgl_event_prediction.eventEvaluator import EventEvaluator
 from kgl_event_prediction.eventPredictor import EventPredictor
 from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
 from utils import *
@@ -13,8 +14,14 @@ class SeriesAnalysis(object):
         self.logger.setLevel(DEBUG)
         self.logger.addHandler(StreamHandler(sys.stdout))
 
-        self.id_list = get_all_unique_series_ids()
+        self.id_list = []
         self.series_list = []
+
+    def load_series(self):
+        """
+        runs queries to load all series entries (takes some time)
+        """
+        self.id_list = get_all_unique_series_ids()
 
         for i in self.id_list:
             temp = get_events_by_series_id(i)
@@ -47,12 +54,26 @@ class SeriesAnalysis(object):
         print("number of series: ", len(self.series_list))
         print("series with homepage: ", count_homepage, str(count_homepage / len(self.series_list) * 100) + "%")
 
+    def predict_event(self, event_predictor: EventPredictor, series_id: str):
+        """
+        :event_predictor: EventPredictor: any subclass of EventPredictor to be used in predicting Event
+        :series_id: str: the id of the series where the next event should be predicted
+
+        :print: prints the next event and some additional information
+        """
+        event_predictor.initialize(series_id)
+        next_event = event_predictor.get_next_event()
+        conf_event = EventEvaluator(next_event).is_title_valid()
+        self.logger.debug(tabulate([next_event], headers="keys"))
+        print(EventEvaluator.get_title_from_url(next_event.homepage), "<-> web title")
+        print(conf_event, "<-> is title valid? ")
+
     def rate_event_prediction(self, event_predictor: EventPredictor):
         """
         - input: EventPredictor
         - output: IDs, predicted event, and summary (title, homepage, acronym, confidence...)
         """
-        # TODO: replace SimpleEventPredictor with event predictor parameter
+
         count_events = 0
         count_events_not_null = 0
         count_success = 0
