@@ -18,13 +18,15 @@ class SearchingEventPredictor(EventPredictor):
     def initialize(self, series_id: str):
         self.series_id = series_id
         self.series_list = get_events_by_series_id(self.series_id)
-        self.predicted_next_event = self.replace_year_all_elements(self.last_event, self.last_event.year+1)
 
         # can't get first entry of empty array
         if len(self.series_list) > 1:
             self.last_event = self.series_list[0]
 
-        #self.search_by_acronym(self.predicted_next_event)
+        self.predicted_next_event = self.replace_year_all_elements(self.last_event, self.last_event.year + 1)
+
+        print(self.predicted_next_event)
+        self.search_by_acronym(self.predicted_next_event)
 
     @staticmethod
     def search_by_acronym(event: Event):

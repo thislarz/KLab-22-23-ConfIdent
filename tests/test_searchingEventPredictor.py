@@ -7,20 +7,19 @@ from kgl_event_prediction.event import Event
 
 class TestSearchingEventPredictor(unittest.TestCase):
 
+    @unittest.skip("Queries not yet runnable in test environment")
     def test_class_initialization(self):
-        with self.assertRaises(Exception):
-            ep = SearchingEventPredictor()
-            ep.initialize("Q1961016")
-        self.assertEqual("Q1961016", ep.series_id, 'Initialized with wrong series_id')
+        ep = SearchingEventPredictor()
+        ep.initialize("Q1961016")
 
-        # ep.initialize("Q1961016")
+        self.assertEqual("Q1961016", ep.series_id, 'Initialized with wrong series_id')
 
         # tests getter methods
         next = ep.get_next_event()
         last = ep.get_last_event()
         self.assertEqual(next, ep.predicted_next_event, "next_event wasn't properly initialized")
         self.assertEqual(last, ep.get_last_event(), "last_event wasn't properly initialized")
-        # self.assertGreater(len(ep.series_list), 0, "somehow the series_list is empty")
+        self.assertGreater(len(ep.series_list), 0, "somehow the series_list is empty")
 
     def test_replace_year_all_elements(self):
         event1 = Event(
@@ -40,4 +39,3 @@ class TestSearchingEventPredictor(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    

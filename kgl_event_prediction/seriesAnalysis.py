@@ -98,3 +98,69 @@ class SeriesAnalysis(object):
         print("Events not null: ", count_events_not_null)
         print("Successes: ", count_success)
         print("Success rate: ", count_success/count_events_not_null)
+
+    @staticmethod
+    def general_cc_analytics():
+        SeriesAnalysis.cc_analytics("event_wikidata")
+        SeriesAnalysis.cc_analytics("event_orclone")
+        SeriesAnalysis.cc_analytics("event_or")
+        # SeriesAnalysis.cc_analytics("event_ceurws")
+
+        SeriesAnalysis.cc_analytics("eventseries_orclone")
+
+    @staticmethod
+    def cc_analytics(table: str):
+
+        all = "title"
+        url = "homepage"
+        series = ""
+        date = ""
+        year = ""
+        if table == "event_wikidata":
+            series = "eventInSeriesId"
+            year = "year"
+        elif table == "event_orclone":
+            series = "inEventSeries"
+            year = "year"
+        elif table == "event_or":
+            series = "inEventSeries"
+            date = "startDate"
+            year = "year"
+        elif table == "event_ceurws":
+            url = "url"
+
+        print("----------"+table+"-------------")
+        total_events = SeriesAnalysis.count_column_in_table(table, all)
+        events_homepages = SeriesAnalysis.count_column_in_table(table, url)
+        events_series_id = SeriesAnalysis.count_column_in_table(table, series)
+        try:
+            events_date = SeriesAnalysis.count_column_in_table(table, date)
+        except Exception:
+            events_date = 0
+
+        try:
+            events_year = SeriesAnalysis.count_column_in_table(table, year)
+        except Exception:
+            events_year = 0
+
+        homepage_percent = round(events_homepages / total_events*100, 3)
+        series_id_percent = round(events_series_id / total_events*100, 3)
+        year_percent = round(events_year / total_events*100, 3)
+        date_percent = round(events_date / total_events*100, 3)
+
+        print(total_events, " : Total number of entries")
+        print(events_homepages, " : Total number of entries with Homepages", "-", homepage_percent, "% of Total")
+        if series != "":
+            print(events_series_id, " : Total number of entries with a linked series", "-", series_id_percent,
+                  "% of Total")
+        if date != "":
+            print(events_date, " : Total number of entries with a date", "-", date_percent,
+                  "% of Total")
+        print(events_year, " : Total number of entries with a year", "-", year_percent, "% of Total")
+
+    @staticmethod
+    def count_column_in_table(table: str, column: str):
+        query = open("resources/queries/countSeriesVariable.sql").read()
+        query = replace_var_in_sql(query, "VARIABLE1", column)
+        query = replace_var_in_sql(query, "VARIABLE2", table)
+        return query_corpus_db(query)[0]["COUNT("+column+")"]

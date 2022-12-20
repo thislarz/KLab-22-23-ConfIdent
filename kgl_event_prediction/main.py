@@ -7,6 +7,7 @@ from tabulate import tabulate
 import sys
 
 from kgl_event_prediction.SearchingEventPredictor import SearchingEventPredictor
+from kgl_event_prediction.db_util import DbUtil
 from kgl_event_prediction.seriesAnalysis import SeriesAnalysis
 from kgl_event_prediction.utils import *
 from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
@@ -28,5 +29,12 @@ searching_ev = SearchingEventPredictor()
 
 ev = searching_ev
 # seriesAnalysis.rate_event_prediction(event_predictor=ev)
-seriesAnalysis.predict_event(event_predictor=ev, series_id=seriesId_1)
+# seriesAnalysis.predict_event(event_predictor=ev, series_id=seriesId_1)
 
+# gives general statistics for different datasets
+# SeriesAnalysis.general_cc_analytics()
+
+db = DbUtil("event_or")
+res = db.get_last_x_events()
+logger.debug(tabulate(res[1000:1050], headers="keys"))
+print(len(res))
