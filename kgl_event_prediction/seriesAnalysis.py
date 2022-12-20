@@ -2,6 +2,7 @@ from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
 import sys
 
+from kgl_event_prediction.db_util import DbUtil
 from kgl_event_prediction.eventEvaluator import EventEvaluator
 from kgl_event_prediction.eventPredictor import EventPredictor
 from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
@@ -30,7 +31,7 @@ class SeriesAnalysis(object):
 
     def all_series_analytics(self):
         """
-        :print: analytic data for the series in the console
+        :print: analytic data for the series in the console (configured to work on event_wikidata)
         """
         count_total_entries = 0
         count_len_max3 = 0
@@ -100,7 +101,43 @@ class SeriesAnalysis(object):
         print("Success rate: ", count_success/count_events_not_null)
 
     @staticmethod
+    def or_analytics(last_years: int):
+        db = DbUtil("event_or")
+        res = db.get_last_x_events(last_years)
+        total_events = len(res)
+        print(res[0])
+
+        print(total_events, " Events in last", last_years, " years")
+
+        # detect bad data
+        fake_hp = []
+        empty_title = []
+        for event in res:
+            if SeriesAnalysis.url_is_homepage(event.homepage) is False:
+                fake_hp.append(event)
+            if event.title == "" or event.title is None:
+                empty_title.append(event)
+
+        print(len(fake_hp), " fake homepages detected**", round(len(fake_hp)/total_events*100, 2), "%")
+        print(len(empty_title), " events have empty titles", round(len(empty_title) / total_events * 100, 2), "%")
+
+
+    @staticmethod
+    def url_is_homepage(url: str):
+        """
+        checks if the url includes terms that are associated with alternative event references
+        """
+        fakes = ["elsevier", "springer", "inderscience", "dblp", "wikicfp.com"]
+        for f in fakes:
+            if url.find(f) != -1:
+                return False
+        return True
+
+    @staticmethod
     def general_cc_analytics():
+        """
+        provides general insight into a broad range of datasets
+        """
         SeriesAnalysis.cc_analytics("event_wikidata")
         SeriesAnalysis.cc_analytics("event_orclone")
         SeriesAnalysis.cc_analytics("event_or")
@@ -110,6 +147,10 @@ class SeriesAnalysis(object):
 
     @staticmethod
     def cc_analytics(table: str):
+        """
+        prints general information of a dataset. Configured to handle different datasets.
+        Slave to general_cc_analytics
+        """
 
         all = "title"
         url = "homepage"
@@ -160,6 +201,9 @@ class SeriesAnalysis(object):
 
     @staticmethod
     def count_column_in_table(table: str, column: str):
+        """
+        counts entries in a specific column of a dataset (where that column is not NULL)
+        """
         query = open("resources/queries/countSeriesVariable.sql").read()
         query = replace_var_in_sql(query, "VARIABLE1", column)
         query = replace_var_in_sql(query, "VARIABLE2", table)

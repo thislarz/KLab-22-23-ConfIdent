@@ -34,7 +34,10 @@ ev = searching_ev
 # gives general statistics for different datasets
 # SeriesAnalysis.general_cc_analytics()
 
+SeriesAnalysis.or_analytics(last_years=2)
+
+"""
 db = DbUtil("event_or")
-res = db.get_last_x_events()
-logger.debug(tabulate(res[1000:1050], headers="keys"))
-print(len(res))
+res = db.get_last_x_events(1)
+logger.debug(tabulate(res, headers="keys"))
+"""

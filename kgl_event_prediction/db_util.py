@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from lodstorage.sql import SQLDB
 from os.path import expanduser
@@ -17,11 +17,32 @@ class DbUtil(object):
         res = DbUtil.query_corpus_db(query)
         return res
 
-    def get_last_x_events(self):
+    def get_last_x_events(self, last_years: int):
+        """
+        :param last_years: int determining how many years should be queried.
+
+        works on event_or (needs to be configured to work with a queries with a year field)
+        """
+        # loads the query
         query = open("resources/queries/getLastXEvents.sql").read()
+        # sets the table for the query (currently only event_or works or similar)
         query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
+
+        # creates query snippet that selects only the recent entries
+        years = ""
+        now = datetime.now().year
+        for i in range(0, last_years):
+            temp_year = now - i
+            years += "    startDate LIKE '"+str(temp_year)+"%'"
+            if i != last_years-1:
+                years += "OR \n"
+
+        # sets query snipped
+        query = replace_var_in_sql(query, "VARIABLE_YEARS", years)
+        # runs query
         res = DbUtil.query_corpus_db(query)
 
+        # converts dict event list to list of Events
         events = []
         for event in res:
             events.append(DbUtil.convert_to_event(event))
@@ -84,7 +105,7 @@ class DbUtil(object):
             year = queried_event['year']
         elif 'startDate' in queried_event.keys() \
                 and queried_event['startDate'] is not None \
-                and type(queried_event['startDate']) == datetime.datetime:
+                and type(queried_event['startDate']) == datetime:
             year = queried_event['startDate'].year
 
         acronym = queried_event['acronym']
