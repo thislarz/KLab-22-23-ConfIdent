@@ -20,17 +20,22 @@ logger.addHandler(StreamHandler(sys.stdout))
 seriesId_1 = "Q1961016"
 seriesId_2 = "Q18353514"
 
-seriesAnalysis = SeriesAnalysis()
-# seriesAnalysis.load_series()
+# creates an Event Predictor object that can be used to predict a single event or passed to seriesAnalysis to evaluate
 simple_ev = SimpleEventPredictor()
-simple_ev.initialize(seriesId_1)
-event = simple_ev.predicted_next_event
 
-# seriesAnalysis.rate_event_prediction(event_predictor=ev)
-# seriesAnalysis.predict_event(event_predictor=ev, series_id=seriesId_1)
+# creates A seriesAnalysis object
+seriesAnalysis = SeriesAnalysis()
+
+# evaluates the event_predictor on all series
+seriesAnalysis.rate_event_prediction(event_predictor=simple_ev)
+
+
+# sets up the eventPredictor with a series
+simple_ev.initialize(seriesId_1)
+# predicts the next event
+event = simple_ev.get_next_event()
 
 confEvent = EventEvaluator(event).is_element_valid("title")
-
 print(EventEvaluator.get_element_content_from_url(event.homepage, "title"), "<-> web title")
 print(confEvent, "<-> is title valid? ")
 

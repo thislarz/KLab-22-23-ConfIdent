@@ -13,9 +13,10 @@ def query_corpus_db(sql_query: str = None):
 
     # specifies file location of the Database
     try:
-        db_file = home + "/ConferenceCorpus/EventCorpus.db"
-    except:
         db_file = home + "/.conferencecorpus/EventCorpus.db"
+    except:
+        db_file = home + "/ConferenceCorpus/EventCorpus.db"
+
     sql_db = SQLDB(dbname=db_file)
 
     # now we can directly query the EventCorpus.db and get LoDs (List of Dicts) as result

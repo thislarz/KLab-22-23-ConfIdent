@@ -34,6 +34,10 @@ class SeriesAnalysis(object):
         """
         :print: analytic data for the series in the console (configured to work on event_wikidata)
         """
+        # if series are not preloaded, load series
+        if len(self.series_list) == 0:
+            self.load_series()
+
         count_total_entries = 0
         count_len_max3 = 0
         count_len_min10 = 0
@@ -75,6 +79,10 @@ class SeriesAnalysis(object):
         - input: EventPredictor
         - output: IDs, predicted event, and summary (title, homepage, acronym, confidence...)
         """
+
+        # if series are not preloaded, load series
+        if len(self.series_list) == 0:
+            self.load_series()
 
         count_events = 0
         count_events_not_null = 0
