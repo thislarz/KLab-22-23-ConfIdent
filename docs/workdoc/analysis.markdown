@@ -97,6 +97,7 @@ series with 10 or more: 113 -> 5.49%
 
 407  events have empty titles 5.24 %
 
+<br/>
 
 #### dataquality of last 15 years
 
@@ -106,6 +107,7 @@ series with 10 or more: 113 -> 5.49%
 
 289  events have empty titles 3.98 %
 
+<br/>
 
 #### dataquality of last 10 years
 
@@ -115,6 +117,7 @@ series with 10 or more: 113 -> 5.49%
 
 154  events have empty titles 3.65 %
 
+<br/>
 
 #### dataquality of last 5 years
 
@@ -124,6 +127,7 @@ series with 10 or more: 113 -> 5.49%
 
 10  events have empty titles 0.41 %
 
+<br/>
 
 #### dataquality of last 2 years
 
@@ -133,6 +137,8 @@ series with 10 or more: 113 -> 5.49%
 
 0  events have empty titles 0.0 %
 
+<br/>
+
 #### methods
 ** hompages containing the following strings are considered to be fake:
 
@@ -140,8 +146,34 @@ series with 10 or more: 113 -> 5.49%
 
 Manuall controll of the 2022 entries suggests that the problem of unauthentic homepages, does not persist in new entries.
 
+<br/>
+
 #### conclusion
 
 dataquality seems satisfactory on first analysis
+
+---
+
+### event_or analysis (20.12.22)
+
+1964  Events in last 4  years
+
+650  Acronyms occur at least twice
+
+104  at least events have a written numeral in title. 1952 total events*
+
+<br/>
+
+843  Events in last 2  years
+
+169  Acronyms occur at least twice
+
+52  at least events have a written numeral in title. 843  total events
+
+<br/>
+
+#### conclusion
+
+We seem to have 5% to 20% written numerals in the titles. Is annoying but okay to deal with.
 
 ---

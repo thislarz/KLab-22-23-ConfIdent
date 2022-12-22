@@ -14,5 +14,6 @@ dependencies = [
     'sqlite-web',
     'beautifulsoup4',
     'requests',
-    'search-engine-parser'
+    'search-engine-parser',
+    'matplotlib'
 ]

@@ -36,8 +36,9 @@ ev = searching_ev
 
 SeriesAnalysis.or_analytics(last_years=2)
 
-"""
 db = DbUtil("event_or")
-res = db.get_last_x_events(1)
-logger.debug(tabulate(res, headers="keys"))
-"""
+res = db.get_last_x_events(2)
+# logger.debug(tabulate(res, headers="keys"))
+
+SeriesAnalysis.count_acronym_doubles(res, True)
+

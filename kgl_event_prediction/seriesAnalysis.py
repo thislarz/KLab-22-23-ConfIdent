@@ -5,6 +5,7 @@ import sys
 from kgl_event_prediction.db_util import DbUtil
 from kgl_event_prediction.eventEvaluator import EventEvaluator
 from kgl_event_prediction.eventPredictor import EventPredictor
+from kgl_event_prediction.resources.ordinalNumbers import OrdinalNumbers
 from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
 from utils import *
 
@@ -120,6 +121,59 @@ class SeriesAnalysis(object):
 
         print(len(fake_hp), " fake homepages detected**", round(len(fake_hp)/total_events*100, 2), "%")
         print(len(empty_title), " events have empty titles", round(len(empty_title) / total_events * 100, 2), "%")
+
+        # remove bad data
+        for event in fake_hp+empty_title:
+            try:
+                res.remove(event)
+            except:
+                None
+
+        print(len(SeriesAnalysis.count_acronym_doubles(event_list=res, ignore_years=False)), " Acronyms occur at least twice")
+
+        # count word numerals
+        numeral_count = 0
+        for event in res:
+            if SeriesAnalysis.find_word_numerals(event.title):
+                numeral_count += 1
+        print(numeral_count, " at least events have a written numeral in title.", len(res), " total events")
+
+    @staticmethod
+    def count_acronym_doubles(event_list: list, ignore_years: bool):
+        unique_list = []
+        duplicate_list = []
+        for event in event_list:
+
+            # remove years from acronyms
+            acr = event.acronym
+            if ignore_years is False:
+                acr = ""
+                temp = event.acronym.split(' ')
+                for x in temp:
+                    if x.isnumeric() is False:
+                        acr += x
+
+            if acr in unique_list:
+                duplicate_list.append(event)
+
+            else:
+                unique_list.append(acr)
+
+        return duplicate_list
+
+    @staticmethod
+    def find_word_numerals(text: str):
+        ord_list = OrdinalNumbers().get_ordinal_list()
+
+        # uppercase text to process
+        text = text.lower()
+
+        snippet_list = text.split(' ')
+        for snippet in snippet_list:
+            if snippet in ord_list:
+                return True
+        return False
+
 
 
     @staticmethod
