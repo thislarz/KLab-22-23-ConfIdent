@@ -7,7 +7,7 @@ def start_corpus_db_browser():
     start sqlite browser with the ConferenceCorpus database
     """
 
-    db_file = home+"/.conferencecorpus/EventCorpus.db"
+    db_file = home + "/ConferenceCorpus/EventCorpus.db"
     parser = argparse.ArgumentParser(
             prog='ConferenceCorpusDbWebBrowser',
             description='Web interface for the database of the ConferenceCorpus',

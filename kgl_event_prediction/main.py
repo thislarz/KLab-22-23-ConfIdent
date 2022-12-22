@@ -3,11 +3,11 @@
 #
 #
 from logging import Logger, DEBUG, StreamHandler
-from tabulate import tabulate
+
 import sys
 
 from kgl_event_prediction.seriesAnalysis import SeriesAnalysis
-from kgl_event_prediction.utils import *
+
 from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
 from kgl_event_prediction.eventEvaluator import EventEvaluator
 
@@ -20,16 +20,18 @@ logger.addHandler(StreamHandler(sys.stdout))
 seriesId_1 = "Q1961016"
 seriesId_2 = "Q18353514"
 
-# code of interest
-event_predictor = SimpleEventPredictor(seriesId_2)
-event = event_predictor.get_next_event()
+seriesAnalysis = SeriesAnalysis()
+# seriesAnalysis.load_series()
+simple_ev = SimpleEventPredictor()
+simple_ev.initialize(seriesId_1)
+event = simple_ev.predicted_next_event
 
-logger.debug(tabulate([event], headers="keys"))
+# seriesAnalysis.rate_event_prediction(event_predictor=ev)
+# seriesAnalysis.predict_event(event_predictor=ev, series_id=seriesId_1)
 
 confEvent = EventEvaluator(event).is_element_valid("title")
 
 print(EventEvaluator.get_element_content_from_url(event.homepage, "title"), "<-> web title")
 print(confEvent, "<-> is title valid? ")
 
-seriesAnalysis = SeriesAnalysis()
-seriesAnalysis.rate_event_prediction()
+

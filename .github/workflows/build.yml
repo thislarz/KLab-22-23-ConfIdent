@@ -23,6 +23,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      id: cache_corpus
+      with:
+        path: ~/.conferencecorpus
+        key: ${{ matrix.os }}-EventCorpus
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -32,6 +37,7 @@ jobs:
         python -m pip install --upgrade pip
         bash scripts/install
     - name: Download ConferenceCorpus
+      if: steps.cache_corpus.outputs.cache-hit != 'true'
       run: |
         python scripts/get_cc_db.py
     - name: Run tests
