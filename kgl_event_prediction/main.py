@@ -26,8 +26,9 @@ event = event_predictor.get_next_event()
 
 logger.debug(tabulate([event], headers="keys"))
 
-confEvent = EventEvaluator(event).is_title_valid()
-print(EventEvaluator.get_title_from_url(event.homepage), "<-> web title")
+confEvent = EventEvaluator(event).is_element_valid("title")
+
+print(EventEvaluator.get_element_content_from_url(event.homepage, "title"), "<-> web title")
 print(confEvent, "<-> is title valid? ")
 
 seriesAnalysis = SeriesAnalysis()

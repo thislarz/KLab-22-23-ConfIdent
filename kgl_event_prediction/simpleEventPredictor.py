@@ -2,6 +2,16 @@ from kgl_event_prediction.eventEvaluator import EventEvaluator
 from kgl_event_prediction.eventPredictor import EventPredictor
 from kgl_event_prediction.utils import *
 from kgl_event_prediction.event import Event
+import re
+
+
+def number_increase_in_string(string):
+    def number_increase(match):
+        num = int(match.group())
+        return str(num + 1)
+
+    pattern = r'\d+'
+    return re.sub(pattern, number_increase, string)
 
 
 class SimpleEventPredictor(EventPredictor):
@@ -35,6 +45,9 @@ class SimpleEventPredictor(EventPredictor):
         anticipated_year = year1 + (year1 - year2)
         return anticipated_year
 
+    #def number_increase(self, match):
+     #   num = int(match.group())
+      #  return str(num + 1)
 
     """
     Cases:
@@ -54,16 +67,26 @@ class SimpleEventPredictor(EventPredictor):
 
         try:
             title = proceeding.title.replace(preceding_year, year)
+            #if title == proceeding.title:
+             #   title = self.number_increase_in_string(proceeding.title)
         except:
             title = ""
 
         try:
             homepage = proceeding.homepage.replace(preceding_year, year)
+            if homepage == proceeding.homepage:
+                diff = year - preceding_year
+                for x in range(diff):
+                    homepage = number_increase_in_string(proceeding.homepage)
         except:
             homepage = ""
 
         try:
             acronym = proceeding.acronym.replace(preceding_year, year)
+            if acronym == proceeding.acronym:
+                diff = year - preceding_year
+                for x in range(diff):
+                    acronym = number_increase_in_string(proceeding.acronym)
         except:
             acronym = ""
 
@@ -79,9 +102,10 @@ class SimpleEventPredictor(EventPredictor):
 
     def get_summary(self):
         event_evaluator = EventEvaluator(self.predicted_next_event)
-        return event_evaluator.is_title_valid()
-
-
+        if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid("h1") or event_evaluator.is_element_valid("h2"):
+            return True
+        else:
+            return False
 
 # If you have a html file in your project
 # with open("website.html", "r") as f:  # f is a file
