@@ -33,10 +33,13 @@ seriesAnalysis.rate_event_prediction(event_predictor=simple_ev)
 # sets up the eventPredictor with a series
 simple_ev.initialize(seriesId_1)
 # predicts the next event
-event = simple_ev.get_next_event()
 
+# event = simple_ev.get_next_event()
+
+seriesAnalysis.rate_event_prediction(simple_ev)
+"""
 confEvent = EventEvaluator(event).is_element_valid("title")
 print(EventEvaluator.get_element_content_from_url(event.homepage, "title"), "<-> web title")
 print(confEvent, "<-> is title valid? ")
-
+"""
 

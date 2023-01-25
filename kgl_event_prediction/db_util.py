@@ -4,6 +4,7 @@ from lodstorage.sql import SQLDB
 from os.path import expanduser
 from kgl_event_prediction.event import Event
 from kgl_event_prediction.utils import *
+from tabulate import tabulate
 
 
 class DbUtil(object):
@@ -12,19 +13,36 @@ class DbUtil(object):
         self.tabel = table
 
     def get_all_events(self):
+        """
+        queries all events from the initialized table and returns a list of Events (Dataclass objects)
+        """
         query = open("resources/queries/getAllEvents.sql").read()
         query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
         res = DbUtil.query_corpus_db(query)
-        return res
+
+        # converts dict event list to list of Events
+        events = []
+        for event in res:
+            events.append(DbUtil.convert_to_event(event))
+        return events
+
+
 
     def get_last_x_events(self, last_years: int):
         """
         :param last_years: int determining how many years should be queried.
-
+        :return: list of Events
         works on event_or (needs to be configured to work with a queries with a year field)
         """
         # loads the query
-        query = open("resources/queries/getLastXEvents.sql").read()
+        if self.tabel == "event_or":
+            query = open("resources/queries/getLastXEvents.sql").read()
+        elif self.tabel == "event_orclone":
+            query = open("resources/queries/getLastXEventsORCLONE.sql").read()
+        else:
+            query = ""
+            print("WARNING - Tried running get_last_x_events on "+self.tabel+" which is not allowed.")
+
         # sets the table for the query (currently only event_or works or similar)
         query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
 
@@ -33,9 +51,15 @@ class DbUtil(object):
         now = datetime.now().year
         for i in range(0, last_years):
             temp_year = now - i
-            years += "    startDate LIKE '"+str(temp_year)+"%'"
-            if i != last_years-1:
-                years += "OR \n"
+
+            if self.tabel == "event_or":
+                years += "    startDate LIKE '"+str(temp_year)+"%'"
+                if i != last_years-1:
+                    years += "OR \n"
+            elif self.tabel == "event_orclone":
+                years += " year LIKE "+str(temp_year)+" "
+                if i != last_years-1:
+                    years += "OR \n"
 
         # sets query snipped
         query = replace_var_in_sql(query, "VARIABLE_YEARS", years)
@@ -48,6 +72,45 @@ class DbUtil(object):
             events.append(DbUtil.convert_to_event(event))
         return events
 
+    @staticmethod
+    def group_by_acronym(event_list: list):
+
+        # a high value indicates bad data. Should be kept in mind when interpreting results
+        acronym_not_string = 0
+        series_dict = {
+
+        }
+        for event in event_list:
+
+            # remove years from acronyms
+            acr = ""
+            try:
+                temp = event.acronym.split(' ')
+                if len(temp) == 1:
+                    temp = event.acronym.split('_')
+            except:
+                temp = ""
+                acronym_not_string += 1
+
+            # only focuses on the split of the acronym that is no number
+            for x in temp:
+                if x.isnumeric() is False:
+                    acr += x
+
+            if acr in series_dict.keys():
+                series_dict[acr].append(event)
+            elif acr != "":
+                series_dict[acr] = [event]
+
+        series_count = 0
+        for x in series_dict.keys():
+            series_count += 1
+            print(x)
+            print(tabulate(series_dict[x], headers="keys"))
+
+        print(series_count, " series count")
+        print(acronym_not_string, " acronym not string")
+        print(len(event_list), " total events")
     @staticmethod
     def query_corpus_db(sql_query: str = None):
         """

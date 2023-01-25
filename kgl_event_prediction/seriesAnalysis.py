@@ -60,6 +60,59 @@ class SeriesAnalysis(object):
         print("number of series: ", len(self.series_list))
         print("series with homepage: ", count_homepage, str(count_homepage / len(self.series_list) * 100) + "%")
 
+    @staticmethod
+    def evaluate_dates_in_field(event_list: list):
+        list_init = []
+        for x in range(0,30):
+            list_init.append(0)
+
+        nums_title = list_init.copy()
+        nums_accronym = list_init.copy()
+        nums_homepage = list_init.copy()
+        count_title_empty = 0
+        count_accronym_empty = 0
+        count_homepage_empty = 0
+
+        for event in event_list:
+            if event.title == "" or event.title is None:
+                count_title_empty += 1
+            else:
+                temp_title = count_numerals(event.title)
+                nums_title[temp_title] += 1
+
+            if event.acronym == "" or event.acronym is None:
+                count_accronym_empty += 1
+            else:
+                temp_accronym = count_numerals(event.acronym)
+                nums_accronym[temp_accronym] += 1
+
+            if event.homepage == "" or event.homepage is None:
+                count_homepage_empty += 1
+            else:
+                temp_homepage = count_numerals(event.homepage)
+                nums_homepage[temp_homepage] += 1
+
+        print("empty_title", count_title_empty)
+        print("Nums_title")
+        print(nums_title)
+        print("empty_accronym", count_accronym_empty)
+        print("Nums_accronym")
+        print(nums_accronym)
+        print("empty_homepage", count_homepage_empty)
+        print("Nums_homepage")
+        print(nums_homepage)
+
+        total_events = len(event_list)
+        res_dict = {
+            "percent_empty_title": round(count_title_empty/total_events, 4),
+            "percent_empty_acronym": round(count_accronym_empty/total_events, 4),
+            "percent_empty_homepage": round(count_homepage_empty / total_events, 4),
+            "numeral_list_title": nums_title,
+            "numeral_list_acronym": nums_accronym,
+            "numeral_list_homepage": nums_homepage
+        }
+        return res_dict
+
     def predict_event(self, event_predictor: EventPredictor, series_id: str):
         """
         :event_predictor: EventPredictor: any subclass of EventPredictor to be used in predicting Event
@@ -87,14 +140,23 @@ class SeriesAnalysis(object):
         count_events = 0
         count_events_not_null = 0
         count_success = 0
+        count_events_with_homepages = 0
         for i in self.id_list:
             count_events += 1
+
             # event_predictor = SimpleEventPredictor(i)
             event_predictor.initialize(i)
             next_event = event_predictor.get_next_event()
+
+
+
             if next_event is None:
                 continue
             else:
+
+                if next_event.homepage is not None and next_event.homepage != "":
+                    count_events_with_homepages += 1
+
                 count_events_not_null += 1
                 print("ID: ", i)
                 self.logger.debug(tabulate([next_event], headers="keys"))
@@ -106,12 +168,24 @@ class SeriesAnalysis(object):
         print("-------------------- Summary:")
         print("Events: ", count_events)
         print("Events not null: ", count_events_not_null)
+        print("Events with homepage: ", count_events_with_homepages, " - %",
+              round(count_events_with_homepages / count_events_not_null, 2)*100)
         print("Successes: ", count_success)
         print("Success rate: ", count_success/count_events_not_null)
+        print("Success*: ", count_success/count_events_with_homepages)
+
+        res_dict = {
+            "total_events": count_events,
+            "events_not_null": count_events_not_null,
+            "successes": count_success,
+            "success_rate": count_success/count_events_not_null
+        }
+        return res_dict
 
     @staticmethod
     def or_analytics(last_years: int):
-        db = DbUtil("event_or")
+        print("--------------------------")
+        db = DbUtil("event_orclone")
         res = db.get_last_x_events(last_years)
         total_events = len(res)
         print(res[0])
@@ -137,7 +211,8 @@ class SeriesAnalysis(object):
             except:
                 None
 
-        print(len(SeriesAnalysis.count_acronym_doubles(event_list=res, ignore_years=False)), " Acronyms occur at least twice")
+        acronym_doubles = len(SeriesAnalysis.count_acronym_doubles(event_list=res, ignore_years=False))
+        print(acronym_doubles, " Acronyms occur at least twice")
 
         # count word numerals
         numeral_count = 0
@@ -145,6 +220,18 @@ class SeriesAnalysis(object):
             if SeriesAnalysis.find_word_numerals(event.title):
                 numeral_count += 1
         print(numeral_count, " at least events have a written numeral in title.", len(res), " total events")
+
+        # will return a list of series
+        db.group_by_acronym(res)
+
+        res_dict = {
+            "total_events": total_events,
+            "fake_homepages": len(fake_hp),
+            "empty_titles": len(empty_title),
+            "acronyms_doubled": acronym_doubles,
+            "numerals": numeral_count
+        }
+        return res_dict
 
     @staticmethod
     def count_acronym_doubles(event_list: list, ignore_years: bool):
@@ -156,7 +243,11 @@ class SeriesAnalysis(object):
             acr = event.acronym
             if ignore_years is False:
                 acr = ""
-                temp = event.acronym.split(' ')
+                try:
+                    temp = event.acronym.split(' ')
+                except:
+                    temp = ""
+
                 for x in temp:
                     if x.isnumeric() is False:
                         acr += x
@@ -206,6 +297,7 @@ class SeriesAnalysis(object):
         # SeriesAnalysis.cc_analytics("event_ceurws")
 
         SeriesAnalysis.cc_analytics("eventseries_orclone")
+
 
     @staticmethod
     def cc_analytics(table: str):
@@ -261,6 +353,15 @@ class SeriesAnalysis(object):
                   "% of Total")
         print(events_year, " : Total number of entries with a year", "-", year_percent, "% of Total")
 
+        res_dict = {
+            "total_events": total_events,
+            "events_homepages": events_homepages,
+            "events_series_id": events_series_id,
+            "events_date": events_date,
+            "events_year": events_year
+        }
+        return res_dict
+
     @staticmethod
     def count_column_in_table(table: str, column: str):
         """
@@ -270,3 +371,9 @@ class SeriesAnalysis(object):
         query = replace_var_in_sql(query, "VARIABLE1", column)
         query = replace_var_in_sql(query, "VARIABLE2", table)
         return query_corpus_db(query)[0]["COUNT("+column+")"]
+
+
+if __name__ == '__main__':
+    db = DbUtil('event_wikidata')
+    event_list = db.get_all_events()
+

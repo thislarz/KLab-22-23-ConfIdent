@@ -25,6 +25,21 @@ def query_corpus_db(sql_query: str = None):
     return res
 
 
+def count_numerals(text: str):
+    """
+    :param text: any string that is suspected to contain numbers
+    :return: the number of characters that are numeric
+    """
+    if text is None:
+        return 0
+    count = 0
+    for c in text:
+        if c.isnumeric():
+            count += 1
+
+    return count
+
+
 def get_events_by_series_id(series_id: str):
     """
     :param series_id: ID of series as string

@@ -177,3 +177,41 @@ dataquality seems satisfactory on first analysis
 We seem to have 5% to 20% written numerals in the titles. Is annoying but okay to deal with.
 
 ---
+
+### event_orclone analysis (19.01.23)
+
+851  Events in last 3  years
+
+9  fake homepages detected** 1.06 %
+
+1  events have empty titles 0.12 %
+
+316  Acronyms occur at least twice
+
+45  at least events have a written numeral in title. 841  total events
+
+<br/>
+
+Since it is 2023 we have to look at last 3 years.
+
+---
+
+### event_orclone acronym matchings (19.01.23)
+
+524  series count - 276  acronym not string - 841  total events - letzte 3 Jahre
+
+1024  series count - 276  acronym not string - 1529  total events - letzte 4 Jahre
+
+1105  series count - 276  acronym not string - 1991  total events - letzte 5 Jahre
+
+1239  series count - 276  acronym not string - 2508  total events - letzte 6 Jahre
+
+2152  series count - 279  acronym not string - 4053  total events - letzte 10 Jahre
+
+#### conclusion
+
+Apparently are most series short, meaning they only have one or two entries over a long timespan. As a consequence our 
+algorithm should work on a single event entry and the main use of matching acronyms is to clean prediction data to not 
+count doubles.
+
+---
