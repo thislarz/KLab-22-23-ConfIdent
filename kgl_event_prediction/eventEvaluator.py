@@ -13,7 +13,7 @@ class EventEvaluator(object):
         try:
             res = requests.get(url, timeout=10.0)
         except:
-            return ""
+            return None
         event_page = BeautifulSoup(res.text, "html.parser")
 
         if html_element == "title":
@@ -24,7 +24,7 @@ class EventEvaluator(object):
             element_content = event_page.h2
 
         if element_content is None:
-            return ""
+            return None
 
         return element_content.string
 
