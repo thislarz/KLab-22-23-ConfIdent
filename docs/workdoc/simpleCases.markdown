@@ -18,3 +18,16 @@ Events not null:  1947
 Successes:  17
 
 Success rate:  0.8731381612737545 %
+
+---
+### simpleEventPredictor examples (03.02.2023)
+
+Q17012957 prediction success
+
+Q18353514 prediction success
+
+Q3570023 prediction fail
+
+Q1961016 prediction success
+
+Q6053150 prediction fail

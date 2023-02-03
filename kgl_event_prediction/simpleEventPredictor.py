@@ -103,6 +103,9 @@ class SimpleEventPredictor(EventPredictor):
     def get_anticipated_next_year(self):
         return self.anticipated_next_year
 
+    def get_last_event(self):
+        return self.series_list[0]
+
     def get_summary(self):
         event_evaluator = EventEvaluator(self.predicted_next_event)
         if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid("h1") or event_evaluator.is_element_valid("h2"):
