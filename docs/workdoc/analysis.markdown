@@ -215,3 +215,27 @@ algorithm should work on a single event entry and the main use of matching acron
 count doubles.
 
 ---
+
+### event_or_clone column analysis (03.02.2023)
+
+Methodology: This used SeriesAnalysis.count_column_in_table() which uses countSeriesVariable.sql to count entries.
+
+5546 : in event_orclone in inEventSeries
+
+9268 : in event_orclone in acronym
+
+9268 : in event_orclone in lookupAcronym //probably same as above
+
+1482 : in event_orclone in ordinal
+
+9016 : in event_orclone in title
+
+9260 : in event_orclone in year
+
+9221 : in event_orclone in city //this can be a good confirmation tool with high confidence (but only for current event)
+
+8653 : in event_orclone in homepage
+
+246 : in event_orclone in wikidataId
+
+---

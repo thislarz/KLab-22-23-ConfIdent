@@ -63,7 +63,7 @@ class SeriesAnalysis(object):
     @staticmethod
     def evaluate_dates_in_field(event_list: list):
         list_init = []
-        for x in range(0,30):
+        for x in range(0, 30):
             list_init.append(0)
 
         nums_title = list_init.copy()
@@ -376,4 +376,10 @@ class SeriesAnalysis(object):
 if __name__ == '__main__':
     db = DbUtil('event_wikidata')
     event_list = db.get_all_events()
+
+    table = "event_orclone"
+    column = "wikidataId"
+    title = "title"
+    print(SeriesAnalysis.count_column_in_table(table, column), ": in "+table + " in " + column)
+    print(SeriesAnalysis.count_column_in_table(table, title), ": in " + table + " in " + title)
 

@@ -16,6 +16,8 @@ class EventEvaluator(object):
             return None
         event_page = BeautifulSoup(res.text, "html.parser")
 
+        element_content = None
+
         if html_element == "title":
             element_content = event_page.title  # returns first element with the tag title
         elif html_element == "h1":
@@ -26,7 +28,12 @@ class EventEvaluator(object):
         if element_content is None:
             return None
 
-        return element_content.string
+        element_content = element_content.string
+
+        if element_content is None:
+            return None
+
+        return element_content.lower()
 
     def is_element_valid(self, html_element):
         if self.event.homepage is None or self.event.homepage == "":
@@ -37,8 +44,8 @@ class EventEvaluator(object):
         if element_content is None or element_content == "":
             return False
 
-        if self.event.title.find(element_content) != -1 or element_content.find(self.event.title) != -1:
+        if self.event.title.lower().find(element_content) != -1 or element_content.find(self.event.title) != -1:
             return True
 
-        if self.event.acronym.find(element_content) != -1 or element_content.find(self.event.acronym) != -1:
+        if self.event.acronym.lower().find(element_content) != -1 or element_content.find(self.event.acronym) != -1:
             return True

@@ -2,7 +2,7 @@ from lodstorage.sql import SQLDB
 from os.path import expanduser
 from kgl_event_prediction.event import Event
 home = expanduser("~")
-
+import re
 
 def query_corpus_db(sql_query: str = None):
     """
@@ -115,3 +115,12 @@ def remove_duplicates(element_list: list):
         element_list.remove(i)
 
     return element_list
+
+
+def number_increase_in_string(string):
+    def number_increase(match):
+        num = int(match.group())
+        return str(num + 1)
+
+    pattern = r'\d+'
+    return re.sub(pattern, number_increase, string)

@@ -5,15 +5,6 @@ from kgl_event_prediction.event import Event
 import re
 
 
-def number_increase_in_string(string):
-    def number_increase(match):
-        num = int(match.group())
-        return str(num + 1)
-
-    pattern = r'\d+'
-    return re.sub(pattern, number_increase, string)
-
-
 class SimpleEventPredictor(EventPredictor):
     """
     Simple Event Predictor is used to guess events of a series
@@ -78,7 +69,7 @@ class SimpleEventPredictor(EventPredictor):
         try:
             homepage = proceeding.homepage.replace(preceding_year, year)
             if homepage == proceeding.homepage:
-                diff = year - preceding_year
+                diff = int(year) - int(preceding_year)
                 for x in range(diff):
                     homepage = number_increase_in_string(proceeding.homepage)
         except:
@@ -87,7 +78,7 @@ class SimpleEventPredictor(EventPredictor):
         try:
             acronym = proceeding.acronym.replace(preceding_year, year)
             if acronym == proceeding.acronym:
-                diff = year - preceding_year
+                diff = int(year) - int(preceding_year)
                 for x in range(diff):
                     acronym = number_increase_in_string(proceeding.acronym)
         except:

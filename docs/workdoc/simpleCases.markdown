@@ -31,3 +31,26 @@ Q3570023 prediction fail
 Q1961016 prediction success
 
 Q6053150 prediction fail
+
+---
+### mgep (03.02.2023)
+
+#### 1
+
+Event(title='Conference on Artificial Intelligence', year=2016, acronym='AAAI 2016', homepage='http://www.aaai.org/Conferences/AAAI/aaai16.php', series_id='') last
+
+Event(title='Conference on Artificial Intelligence', year='2017', acronym='AAAI 2017', homepage='http://www.aaai.org/Conferences/AAAI/aaai17.php', series_id='') next
+
+403 Forbidden  :  -1 (title : str.find())
+
+False
+
+#### 2
+
+Last event of: AAL 2008 "Acquisition of African Languages" has taken place in year 2008
+
+Next event of: AAL 2008 "Acquisition of African Languages" takes place in the year 2009
+
+False
+
+//should update all years in title

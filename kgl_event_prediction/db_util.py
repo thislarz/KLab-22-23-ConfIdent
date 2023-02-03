@@ -26,7 +26,23 @@ class DbUtil(object):
             events.append(DbUtil.convert_to_event(event))
         return events
 
+    def get_event_by_acronym(self, acronym: str):
+        """
+        :acronym : takes an acronym of an event and returns the Event if that exist in the table eles it raises Error
+        """
+        query_source = open("resources/queries/getEventByField.sql").read()
 
+        # fills in the variable fields
+        query_acr = replace_var_in_sql(query_source, "VARIABLE1", self.tabel)
+        query_acr = replace_var_in_sql(query_acr, "VARIABLE2", 'acronym')
+        query_acr = replace_var_in_sql(query_acr, "VARIABLE3", acronym)
+
+        # runs query
+        res = DbUtil.query_corpus_db(query_acr)
+
+        # convert event to Event
+        converted_event = DbUtil.convert_to_event(res[0])
+        return converted_event
 
     def get_last_x_events(self, last_years: int):
         """

@@ -6,9 +6,10 @@ class EventPredictor(object):
     def __init__(self):
         self.series_id = ""
 
-    def initialize(self, series_id: str):
+    def initialize(self, series_id: str = "", acronym: str = ""):
         """
         :series_id: str : the id of the series for which a new event shall be predicted
+        :acronym: str : the acronym of the conference for which the next event should be guessed
 
         sets all internal variables according to a specified series_id
         """
@@ -20,8 +21,19 @@ class EventPredictor(object):
         """
         pass
 
+    def get_last_event(self):
+        """
+        is supposed to return the event to be belived the last
+        """
+        pass
+
     def get_anticipated_next_year(self):
         """
         is supposed to return the year the next anticipated event takes place in
         """
         pass
+
+    def get_summery(self):
+        """
+        is supposed to evaluate the guess and return the prediction results as true or false
+        """
