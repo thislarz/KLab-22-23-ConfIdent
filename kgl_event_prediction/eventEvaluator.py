@@ -4,14 +4,27 @@ from kgl_event_prediction.event import Event
 
 
 class EventEvaluator(object):
+    """
+    evaluator for Events
+    """
 
     def __init__(self, event: Event):
         self.event = event
 
     @staticmethod
-    def get_element_content_from_url(url, html_element):
+    def get_element_content_from_url(url: str, html_element: str, timeout: float = 10.0) -> str:
+        """
+        get the element content from the given url
+
+        Args:
+            url(str): the url to get the element content from
+            html_element(str): the element to extract e.g. "title,h1,h2"
+
+        Returns:
+            Optional[str]: None or the element content
+        """
         try:
-            res = requests.get(url, timeout=10.0)
+            res = requests.get(url, timeout=timeout)
         except:
             return None
         event_page = BeautifulSoup(res.text, "html.parser")
