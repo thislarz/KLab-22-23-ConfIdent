@@ -5,3 +5,4 @@ beautifulsoup4~=4.11.1
 requests~=2.28.1
 corpus~=0.4.2
 matplotlib
+justpy~=0.10.5

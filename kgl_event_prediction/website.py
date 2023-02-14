@@ -5,10 +5,15 @@ from kgl_event_prediction.multiGuessEventPredictor import MultiGuessEventPredict
 from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
 
 
-input_classes = "m-2 bg-gray-200 border-2 border-gray-200 rounded w-64 py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
+input_classes = "m-2 bg-gray-200 border-2 border-gray-200 rounded w-64 py-2 px-4 text-gray-700 focus:outline-none " \
+                "focus:bg-white focus:border-purple-500"
 p_classes = 'text-gray-500 m-2 p-2 h-32 text-xl border-2'
-check_classes = "m-2 bg-gray-200 border-2 border-gray-200 rounded w-40 py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
+check_classes = "m-2 bg-gray-200 border-2 border-gray-200 rounded w-40 py-2 px-4 text-gray-700 focus:outline-none " \
+                "focus:bg-white focus:border-purple-500"
 check_text_classes = "p-2 text-xl text-gray-500 w-64"
+select_classes = 'w-40 text-xl m-4 p-2 bg-white  border rounded'
+button_classes = 'bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full'
+link_classes = 'font-medium text-blue-600 underline dark:text-blue-500 hover:no-underline'
 
 
 class WebPagePredictor(jp.Div):
@@ -17,23 +22,23 @@ class WebPagePredictor(jp.Div):
         super(WebPagePredictor, self).__init__(**kwargs)
 
         self.event_predictor = "simple"
-
         self.input_series = jp.Input(a=self, classes=input_classes, placeholder='Event Series ID')
 
         # creating a dropdown menu to select predictor
         predictors = ['simple', 'multi guess']
-        self.select = jp.Select(classes='w-40 text-xl m-4 p-2 bg-white  border rounded', a=self, value='simple',
-                           change=self.set_event_predictor)
+        self.select = jp.Select(classes=select_classes, a=self, value='simple', change=self.set_event_predictor)
         for pred in predictors:
             self.select.add(jp.Option(value=pred, text=pred))
 
-        self.btn_predict = jp.Button(a=self, classes='bg-green-500 hover:bg-green-700 text-white font-bold '
-                                                     'py-2 px-4 rounded-full', text='Predict next event',
+        # button to click and predict the event on click
+        self.btn_predict = jp.Button(a=self, classes=button_classes, text='Predict next event',
                                      on_click=self.on_click_predict)
+
+        # fields to display events
         self.div_current_event = jp.Div(a=self, text='Last event loading...', classes=p_classes)
         self.div_results = jp.Div(a=self, text='Next event loading...', classes=p_classes)
 
-        # displays the results (success/fail) of the prediction
+        # displays the evaluation (success/fail) of the prediction
         self.p_check_text = jp.P(a=self, text="Prediction is correct? ", classes=check_text_classes)
         self.p_check = jp.P(a=self, text="event loading...", classes=check_classes)
 
@@ -60,13 +65,18 @@ class WebPagePredictor(jp.Div):
             # sets up the eventPredictor with a series
             event_predictor.initialize(series_id=seriesId)
 
-        # gets last event
+        # gets last event and its homepage link
         last_event = event_predictor.get_last_event()
-        self.div_current_event.text += ' \"' + str(last_event.title) + '\" has taken place in year ' + str(last_event.year) + ', homepage: '+last_event.homepage
+        self.div_current_event.text += ' \"' + str(last_event.title) + '\" has taken place in year ' + \
+                                       str(last_event.year) + ', homepage: '
+        self.div_current_event += jp.A(text=last_event.homepage, href=last_event.homepage, target='blank',
+                                       classes=link_classes)
 
-        # predicts the next event
+        # predicts the next event and its homepage link
         event = event_predictor.get_next_event()
-        self.div_results.text += ' \"' + str(event.title) + '\" takes place in the year ' + str(event.year) + ', homepage: '+event.homepage
+        self.div_results.text += ' \"' + str(event.title) + '\" takes place in the year ' + str(event.year) + \
+                                 ', homepage: '
+        self.div_results += jp.A(text=event.homepage, href=event.homepage, target='blank', classes=link_classes)
 
         self.p_check.text = event_predictor.get_summary()
 
