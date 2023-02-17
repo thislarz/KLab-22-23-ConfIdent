@@ -1,3 +1,4 @@
+import pathlib
 from datetime import datetime
 
 from lodstorage.sql import SQLDB
@@ -16,7 +17,7 @@ class DbUtil(object):
         """
         queries all events from the initialized table and returns a list of Events (Dataclass objects)
         """
-        query = open("resources/queries/getAllEvents.sql").read()
+        query = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getAllEvents.sql").read()
         query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
         res = DbUtil.query_corpus_db(query)
 
@@ -30,7 +31,7 @@ class DbUtil(object):
         """
         :acronym : takes an acronym of an event and returns the Event if that exist in the table eles it raises Error
         """
-        query_source = open("resources/queries/getEventByField.sql").read()
+        query_source = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getEventByField.sql").read()
 
         # fills in the variable fields
         query_acr = replace_var_in_sql(query_source, "VARIABLE1", self.tabel)
@@ -41,7 +42,11 @@ class DbUtil(object):
         res = DbUtil.query_corpus_db(query_acr)
 
         # convert event to Event
-        converted_event = DbUtil.convert_to_event(res[0])
+        if res != []:
+            converted_event = DbUtil.convert_to_event(res[0])
+        else:
+            return Event()
+
         return converted_event
 
     def get_last_x_events(self, last_years: int):
@@ -52,9 +57,9 @@ class DbUtil(object):
         """
         # loads the query
         if self.tabel == "event_or":
-            query = open("resources/queries/getLastXEvents.sql").read()
+            query = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getLastXEvents.sql").read()
         elif self.tabel == "event_orclone":
-            query = open("resources/queries/getLastXEventsORCLONE.sql").read()
+            query = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getLastXEventsORCLONE.sql").read()
         else:
             query = ""
             print("WARNING - Tried running get_last_x_events on "+self.tabel+" which is not allowed.")
@@ -158,7 +163,7 @@ class DbUtil(object):
         use query that takes id as an argument and returns all events of that series
         """
         series_id = str(series_id)
-        query = open("resources/queries/getEventsBySeriesId.sql").read()
+        query = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getEventsBySeriesId.sql").read()
         query = replace_var_in_sql(query, "VARIABLE1", series_id)
         res = DbUtil.query_corpus_db(query)
         res = remove_duplicates(res)
@@ -172,7 +177,8 @@ class DbUtil(object):
     @staticmethod
     def convert_to_event(queried_event: dict):
         """
-        :param queried_event: is an event as queried from the database
+        :param queried_event: is an event as queried from the database;
+            required fields are homepage, title, acronym
         :return: an Event object with the same values as the queried event
         """
         year = 0

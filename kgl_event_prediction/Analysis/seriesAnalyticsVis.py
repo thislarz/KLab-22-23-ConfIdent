@@ -1,5 +1,5 @@
 from kgl_event_prediction.db_util import DbUtil
-from kgl_event_prediction.seriesAnalysis import SeriesAnalysis
+from kgl_event_prediction.Analysis.seriesAnalysis import SeriesAnalysis
 import matplotlib.pyplot as plt
 
 

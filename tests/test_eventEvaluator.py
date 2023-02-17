@@ -1,9 +1,6 @@
 import unittest
 
-from kgl_event_prediction.event import Event
-from kgl_event_prediction.eventEvaluator import EventEvaluator
-from kgl_event_prediction.eventPredictor import EventPredictor
-from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
+from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
 
 
 class TestEventEvaluator(unittest.TestCase):

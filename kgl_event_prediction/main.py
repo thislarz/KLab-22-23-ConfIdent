@@ -6,10 +6,9 @@ from logging import Logger, DEBUG, StreamHandler
 
 import sys
 
-from kgl_event_prediction.seriesAnalysis import SeriesAnalysis
+from kgl_event_prediction.Analysis.seriesAnalysis import SeriesAnalysis
 
-from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
-from kgl_event_prediction.eventEvaluator import EventEvaluator
+from kgl_event_prediction.Predictors.simpleEventPredictor import SimpleEventPredictor
 
 # sets up the Logger
 logger = Logger(name="Steve")

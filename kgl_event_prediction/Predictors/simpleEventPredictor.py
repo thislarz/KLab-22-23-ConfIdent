@@ -1,8 +1,7 @@
-from kgl_event_prediction.eventEvaluator import EventEvaluator
-from kgl_event_prediction.eventPredictor import EventPredictor
+from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
+from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.utils import *
 from kgl_event_prediction.event import Event
-import re
 
 
 class SimpleEventPredictor(EventPredictor):

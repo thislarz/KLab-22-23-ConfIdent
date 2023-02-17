@@ -1,16 +1,16 @@
 import unittest
 
-from kgl_event_prediction.eventPredictor import EventPredictor
-from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
+from kgl_event_prediction.Predictors.multiGuessEventPredictor import MultiGuessEventPredictor
+from kgl_event_prediction.Predictors.simpleEventPredictor import SimpleEventPredictor
 
 
 class TestEventPredictor(unittest.TestCase):
 
-    @unittest.skip("Queries not yet runnable in test environment")
+    # @unittest.skip("Queries not yet runnable in test environment")
     def test_class_initialisation(self):
-        ep = SimpleEventPredictor()
-        ep.initialize("Q1961016")
-        self.assertEqual("Q1961016", ep.series_id, 'Initialized with wrong series_id')
+        ep = MultiGuessEventPredictor()
+        ep.initialize(acronym="AAAI 2017")
+        self.assertEqual("AAAI 2017", ep.get_last_event().acronym)
 
 
 if __name__ == '__main__':

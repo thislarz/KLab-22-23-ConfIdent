@@ -1,8 +1,7 @@
 import justpy as jp
 
-from kgl_event_prediction.eventPredictor import EventPredictor
-from kgl_event_prediction.multiGuessEventPredictor import MultiGuessEventPredictor
-from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
+from kgl_event_prediction.Predictors.multiGuessEventPredictor import MultiGuessEventPredictor
+from kgl_event_prediction.Predictors.simpleEventPredictor import SimpleEventPredictor
 
 
 input_classes = "m-2 bg-gray-200 border-2 border-gray-200 rounded w-64 py-2 px-4 text-gray-700 focus:outline-none " \

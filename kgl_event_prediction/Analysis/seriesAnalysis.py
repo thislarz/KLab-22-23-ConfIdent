@@ -3,10 +3,9 @@ from tabulate import tabulate
 import sys
 
 from kgl_event_prediction.db_util import DbUtil
-from kgl_event_prediction.eventEvaluator import EventEvaluator
-from kgl_event_prediction.eventPredictor import EventPredictor
+from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
+from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.resources.ordinalNumbers import OrdinalNumbers
-from kgl_event_prediction.simpleEventPredictor import SimpleEventPredictor
 from utils import *
 
 
@@ -367,7 +366,7 @@ class SeriesAnalysis(object):
         """
         counts entries in a specific column of a dataset (where that column is not NULL)
         """
-        query = open("resources/queries/countSeriesVariable.sql").read()
+        query = open("../resources/queries/countSeriesVariable.sql").read()
         query = replace_var_in_sql(query, "VARIABLE1", column)
         query = replace_var_in_sql(query, "VARIABLE2", table)
         return query_corpus_db(query)[0]["COUNT("+column+")"]

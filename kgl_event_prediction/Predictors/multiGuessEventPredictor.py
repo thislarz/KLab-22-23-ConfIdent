@@ -1,7 +1,6 @@
-from kgl_event_prediction.eventEvaluator import EventEvaluator
-from kgl_event_prediction.eventPredictor import EventPredictor
+from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
+from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.db_util import DbUtil
-from kgl_event_prediction.event import Event
 from kgl_event_prediction.utils import *
 
 
