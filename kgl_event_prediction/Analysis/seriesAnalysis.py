@@ -6,7 +6,7 @@ from kgl_event_prediction.db_util import DbUtil
 from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
 from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.resources.ordinalNumbers import OrdinalNumbers
-from utils import *
+from kgl_event_prediction.utils import *
 
 
 class SeriesAnalysis(object):

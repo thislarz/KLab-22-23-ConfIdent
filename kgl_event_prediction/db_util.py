@@ -29,7 +29,7 @@ class DbUtil(object):
 
     def get_event_by_acronym(self, acronym: str):
         """
-        :acronym : takes an acronym of an event and returns the Event if that exist in the table eles it raises Error
+        :params acronym : takes an acronym of an event and returns the Event if that exist in the table eles it raises Error
         """
         query_source = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getEventByField.sql").read()
 
