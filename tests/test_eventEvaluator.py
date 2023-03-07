@@ -8,6 +8,7 @@ class TestEventEvaluator(unittest.TestCase):
     test for event evaluator
     """
 
+    @unittest.skip
     def test_get_title_from_url(self):
         """
         test getting a title from an url

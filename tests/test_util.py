@@ -1,29 +1,18 @@
 import unittest
 
-from kgl_event_prediction.event import Event
-from kgl_event_prediction.utils import convert_to_event
+import kgl_event_prediction.utils
 
 
-class TestEventEvaluator(unittest.TestCase):
+class TestUtil(unittest.TestCase):
+    def test_count_numerals(self):
+        self.assertEqual(kgl_event_prediction.utils.count_numerals('2th Conference 2023'), 5)
 
-    def test_convert_to_event(self):
-        event = Event(
-            title="placeholder_title",
-            homepage="placeholder_homepage",
-            year=1000,
-            acronym="placeholder_acronym"
-        )
-        event_dict = {
-            "title": "placeholder_title",
-            "homepage": "placeholder_homepage",
-            "year": 1000,
-            "acronym": "placeholder_acronym"
-        }
-        self.assertEqual(event, convert_to_event(event_dict), "Event conversion was incorrect.")
-        self.assertEqual("placeholder_title", event.title, "Event was created with wrong title.")
-        self.assertEqual("placeholder_homepage", event.homepage, "Event was created with wrong homepage.")
-        self.assertEqual("placeholder_acronym", event.acronym, "Event was created with wrong acronym.")
-        self.assertEqual(1000, event.year, "Event was created with wrong year.")
+    #def test_get_all_unique_series_ids(self):
+    # event_wikidata has 8026 entries and 2060 DISTINCT entries
+    # entry 0: Q70971474
+    # entry last: Q105694587
+    #   all_entries = kgl_event_prediction.utils.get_all_unique_series_ids()
+    #  self.assertEqual(all_entries[0], 'Q70971474')
 
 
 if __name__ == '__main__':

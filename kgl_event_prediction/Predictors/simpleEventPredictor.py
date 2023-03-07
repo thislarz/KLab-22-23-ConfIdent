@@ -1,6 +1,7 @@
 from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
 from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.utils import *
+from kgl_event_prediction.db_util import *
 from kgl_event_prediction.event import Event
 
 
@@ -13,7 +14,7 @@ class SimpleEventPredictor(EventPredictor):
 
     def initialize(self, series_id: str):
         self.series_id = series_id
-        self.series_list = get_events_by_series_id(self.series_id)
+        self.series_list = DbUtil.get_events_by_series_id(self.series_id)
         try:
             self.anticipated_next_year = self.anticipate_year_of_next_event(self.series_list)
             self.predicted_next_event = self.predict_next_event(self.series_list[0], self.anticipated_next_year)

@@ -7,3 +7,4 @@ corpus~=0.4.2
 matplotlib
 justpy~=0.10.5
 pandas >=1.4.4
+coverage

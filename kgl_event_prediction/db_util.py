@@ -4,7 +4,7 @@ from datetime import datetime
 from lodstorage.sql import SQLDB
 from os.path import expanduser
 from kgl_event_prediction.event import Event
-from kgl_event_prediction.utils import *
+from kgl_event_prediction.utils import replace_var_in_sql, remove_duplicates
 from tabulate import tabulate
 
 
@@ -143,10 +143,8 @@ class DbUtil(object):
             sql_query = "SELECT * FROM event LIMIT 5"
 
         # specifies file location of the Database
-        try:
-            db_file = home + "/.conferencecorpus/EventCorpus.db"
-        except:
-            db_file = home + "/ConferenceCorpus/EventCorpus.db"
+        db_file = home + "/.conferencecorpus/EventCorpus.db"
+
         sql_db = SQLDB(dbname=db_file)
 
         # now we can directly query the EventCorpus.db and get LoDs (List of Dicts) as result
@@ -171,7 +169,7 @@ class DbUtil(object):
         # translate queried Events into python Event objects
         events = []
         for queried_event in res:
-            events.append(convert_to_event(queried_event))
+            events.append(DbUtil.convert_to_event(queried_event))
         return events
 
     @staticmethod
@@ -196,3 +194,17 @@ class DbUtil(object):
         acronym = queried_event['acronym']
         event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
         return event
+
+
+    def get_all_unique_series_ids(self):
+        """
+        :return: list of all wikidata events as list of strings
+        """
+        query = open("resources/queries/getEventInSeriesId.sql").read()
+        event_series_id_list = DbUtil.query_corpus_db(query)
+
+        # convert query results from dict with one entry to strings
+        for i in range(0, len(event_series_id_list)):
+            event_series_id_list[i] = event_series_id_list[i]['eventInSeriesId']
+
+        return event_series_id_list
