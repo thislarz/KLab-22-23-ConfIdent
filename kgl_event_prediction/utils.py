@@ -1,28 +1,4 @@
-from lodstorage.sql import SQLDB
-from os.path import expanduser
-from kgl_event_prediction.event import Event
-home = expanduser("~")
 import re
-
-def query_corpus_db(sql_query: str = None):
-    """
-    Returns the result of a direct query to the database
-    """
-    if sql_query is None:
-        sql_query = "SELECT * FROM event LIMIT 5"
-
-    # specifies file location of the Database
-    try:
-        db_file = home + "/.conferencecorpus/EventCorpus.db"
-    except:
-        db_file = home + "/ConferenceCorpus/EventCorpus.db"
-
-    sql_db = SQLDB(dbname=db_file)
-
-    # now we can directly query the EventCorpus.db and get LoDs (List of Dicts) as result
-    # Try it by writing your own query
-    res = sql_db.query(sql_query)
-    return res
 
 
 def count_numerals(text: str):
@@ -38,53 +14,6 @@ def count_numerals(text: str):
             count += 1
 
     return count
-
-
-def get_events_by_series_id(series_id: str):
-    """
-    :param series_id: ID of series as string
-    :return: list of all events of series
-
-    use query that takes id as an argument and returns all events of that series
-    """
-    series_id = str(series_id)
-    query = open("resources/queries/getEventsBySeriesId.sql").read()
-    query = replace_var_in_sql(query, "VARIABLE1", series_id)
-    res = query_corpus_db(query)
-    res = remove_duplicates(res)
-
-    # translate queried Events into python Event objects
-    events = []
-    for queried_event in res:
-        events.append(convert_to_event(queried_event))
-    return events
-
-
-def get_all_unique_series_ids():
-    """
-    :return: list of all wikidata events as list of strings
-    """
-    query = open("resources/queries/getEventInSeriesId.sql").read()
-    event_series_id_list = query_corpus_db(query)
-
-    # convert query results from dict with one entry to strings
-    for i in range(0, len(event_series_id_list)):
-        event_series_id_list[i] = event_series_id_list[i]['eventInSeriesId']
-
-    return event_series_id_list
-
-
-def convert_to_event(queried_event: dict):
-    """
-    :param queried_event: is an event as queried from the database
-    :return: an Event object with the same values as the queried event
-    """
-    title = queried_event['title']
-    homepage = queried_event['homepage']
-    year = queried_event['year']
-    acronym = queried_event['acronym']
-    event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
-    return event
 
 
 def replace_var_in_sql(sql: str, var: str, text: str):

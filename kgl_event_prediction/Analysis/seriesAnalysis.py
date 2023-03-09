@@ -2,11 +2,11 @@ from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
 import sys
 
-from kgl_event_prediction.db_util import DbUtil
 from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
 from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.resources.ordinalNumbers import OrdinalNumbers
 from kgl_event_prediction.utils import *
+from kgl_event_prediction.db_util import DbUtil
 
 
 class SeriesAnalysis(object):
@@ -22,10 +22,10 @@ class SeriesAnalysis(object):
         """
         runs queries to load all series entries (takes some time)
         """
-        self.id_list = get_all_unique_series_ids()
+        self.id_list = DbUtil.get_all_unique_series_ids()
 
         for i in self.id_list:
-            temp = get_events_by_series_id(i)
+            temp = DbUtil.get_events_by_series_id(i)
             temp = [i] + temp
             self.series_list.append(temp)
 
@@ -369,7 +369,7 @@ class SeriesAnalysis(object):
         query = open("../resources/queries/countSeriesVariable.sql").read()
         query = replace_var_in_sql(query, "VARIABLE1", column)
         query = replace_var_in_sql(query, "VARIABLE2", table)
-        return query_corpus_db(query)[0]["COUNT("+column+")"]
+        return DbUtil.query_corpus_db(query)[0]["COUNT("+column+")"]
 
 
 if __name__ == '__main__':

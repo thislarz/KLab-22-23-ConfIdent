@@ -1,6 +1,7 @@
 from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
 from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.db_util import DbUtil
+from kgl_event_prediction.event import Event
 from kgl_event_prediction.utils import *
 
 
@@ -14,7 +15,7 @@ class MultiGuessEventPredictor(EventPredictor):
 
     def initialize(self, series_id: str = "", acronym: str = ""):
         """
-        is initalized by passing a acronym of a conference
+        is initialized by passing an acronym of a conference
         """
         # loads event by acronym
         db = DbUtil(table="event_orclone")
