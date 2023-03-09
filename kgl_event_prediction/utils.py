@@ -53,3 +53,9 @@ def number_increase_in_string(string):
 
     pattern = r'\d+'
     return re.sub(pattern, number_increase, string)
+
+def strip_acronym(acro: str):
+    for i in range(0,10):
+        acro = acro.replace(str(i),'')
+    acro = acro.replace(' ', '')
+    return acro

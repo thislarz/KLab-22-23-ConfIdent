@@ -4,7 +4,7 @@ from datetime import datetime
 from lodstorage.sql import SQLDB
 from os.path import expanduser
 from kgl_event_prediction.event import Event
-from kgl_event_prediction.utils import replace_var_in_sql, remove_duplicates
+from kgl_event_prediction.utils import replace_var_in_sql, remove_duplicates, strip_acronym
 from tabulate import tabulate
 
 
@@ -132,6 +132,7 @@ class DbUtil(object):
         print(series_count, " series count")
         print(acronym_not_string, " acronym not string")
         print(len(event_list), " total events")
+
     @staticmethod
     def query_corpus_db(sql_query: str = None):
         """
@@ -195,6 +196,36 @@ class DbUtil(object):
         event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
         return event
 
+    def get_series_by_acronym(self, acronym: str = "", field_name: str = "acronym"):
+        """
+        :param field_name: str, if field name of acronym is not acronym
+        :param acronym: str, the acronym for which events should be retrieved
+        :return: a list of all events matching that acronym
+        """
+
+        # avoid sql injection
+        # TODO if web framework does not handle this
+
+        query = open(str(pathlib.Path(__file__).parent) + "/resources/queries/getSeriesByAcronym.sql").read()
+
+        # parameterize Query
+        query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
+        query = replace_var_in_sql(query, "VARIABLE2", field_name)
+        query = replace_var_in_sql(query, "VARIABLE3", acronym)
+
+        # execute query
+        res = DbUtil.query_corpus_db(query)
+        res = remove_duplicates(res)
+
+        # translate queried Events into python Event objects
+        events = []
+        for queried_event in res:
+            temp = DbUtil.convert_to_event(queried_event)
+            acro = strip_acronym(temp.acronym)
+            if acro == acronym:
+                events.append(temp)
+        events = self.sort_events_by_year(events)
+        return events
 
     def get_all_unique_series_ids(self):
         """
@@ -208,3 +239,29 @@ class DbUtil(object):
             event_series_id_list[i] = event_series_id_list[i]['eventInSeriesId']
 
         return event_series_id_list
+
+    def make_sql_safe(self, text: str):
+        if '\'' in text:
+            text = text.replace('\'', '')
+        return text
+
+    def sort_events_by_year(self, event_list: list):
+        """
+        sorts events in descending order
+        """
+        sorted_list = []
+        for x in range(0, len(event_list)):
+            if len(event_list) <= 1:
+                sorted_list.append(event_list[0])
+                break
+
+            min = 0
+
+            for y in range(0, len(event_list)):
+                if event_list[y].year > event_list[min].year:
+                    min = y
+
+            sorted_list.append(event_list[min])
+            event_list.remove(event_list[min])
+
+        return sorted_list

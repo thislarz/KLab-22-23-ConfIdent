@@ -34,7 +34,7 @@ class MultiGuessEventPredictor(EventPredictor):
         res_event = self.predict_primitive_next_event(temp, first_anticipated_year)
         iteration = 1
         while iteration < 4 and not MultiGuessEventPredictor.get_summery_of_event(res_event):
-            print("Iteration: ", iteration)
+            # print("Iteration: ", iteration)
             res_event = self.predict_primitive_next_event(temp, first_anticipated_year+iteration)
             iteration += 1
         return res_event
@@ -63,7 +63,7 @@ class MultiGuessEventPredictor(EventPredictor):
                 for x in range(diff):
                     homepage = number_increase_in_string(proceeding.homepage)
         except ValueError:
-            print(homepage, "this is homepage")
+            # print(homepage, "this is homepage")
             homepage = ""
 
         try:
@@ -97,7 +97,7 @@ class MultiGuessEventPredictor(EventPredictor):
 
         title = event_evaluator.get_element_content_from_url(self.next_event.homepage, "title")
         # find = title.find(self.next_event.title)
-        print("webtitle :", title, "event_title: ", self.next_event.title.lower())
+        # print("webtitle :", title, "event_title: ", self.next_event.title.lower())
 
         if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid(
                 "h1") or event_evaluator.is_element_valid("h2"):
@@ -111,7 +111,7 @@ class MultiGuessEventPredictor(EventPredictor):
 
         title = event_evaluator.get_element_content_from_url(event.homepage, "title")
         # find = title.find(event.title)
-        print("webtitle :", title, "event_title: ", event.title.lower())
+        # print("webtitle :", title, "event_title: ", event.title.lower())
 
         if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid(
                 "h1") or event_evaluator.is_element_valid("h2"):

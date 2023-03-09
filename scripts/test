@@ -11,14 +11,16 @@ install_packages() {
   # pip install bokeh matplotlib pandas plotly pydeck pygments seaborn vega_datasets
 }
 
+python -m unittest discover
 
-
+<< 'Multiline-Comment'
 for testmodule in tests/test*.py
 do
   echo "$testmodule"
-  #python -m unittest $testmodule
-  python -m unittest discover
+  python -m unittest $testmodule
+  # python -m unittest discover
 done
 
 #python -m unittest tests/test_foo.py
 
+Multiline-Comment
