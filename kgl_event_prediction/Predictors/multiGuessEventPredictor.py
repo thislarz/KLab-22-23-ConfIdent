@@ -25,7 +25,20 @@ class MultiGuessEventPredictor(EventPredictor):
         self.next_year = self.get_anticipated_next_year()
         self.next_event = self.predict_next_event(self.last_event, self.next_year)
 
-    def predict_next_event(self, proceeding: Event, next_year: int):
+    def predict_next_event(self, proceeding: Event, first_anticipated_year: int):
+        """
+        @params proceeding: is the Event for which the next Event should be predicted
+        """
+        temp = proceeding
+        res_event = self.predict_primitive_next_event(temp, first_anticipated_year)
+        iteration = 1
+        while iteration < 4 and not MultiGuessEventPredictor.get_summery_of_event(res_event):
+            print("Iteration: ", iteration)
+            res_event = self.predict_primitive_next_event(temp, first_anticipated_year+iteration)
+            iteration += 1
+        return res_event
+
+    def predict_primitive_next_event(self, proceeding: Event, next_year: int):
         """
         is exactly copied from simpleEventPredictor modified with int casts
         """
@@ -65,6 +78,9 @@ class MultiGuessEventPredictor(EventPredictor):
 
         return anticipated_event
 
+
+
+
     def get_next_event(self):
         return self.next_event
 
@@ -81,6 +97,20 @@ class MultiGuessEventPredictor(EventPredictor):
         title = event_evaluator.get_element_content_from_url(self.next_event.homepage, "title")
         # find = title.find(self.next_event.title)
         print("webtitle :", title, "event_title: ", self.next_event.title.lower())
+
+        if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid(
+                "h1") or event_evaluator.is_element_valid("h2"):
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def get_summery_of_event(event: Event):
+        event_evaluator = EventEvaluator(event)
+
+        title = event_evaluator.get_element_content_from_url(event.homepage, "title")
+        # find = title.find(event.title)
+        print("webtitle :", title, "event_title: ", event.title.lower())
 
         if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid(
                 "h1") or event_evaluator.is_element_valid("h2"):

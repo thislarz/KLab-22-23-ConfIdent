@@ -15,5 +15,6 @@ dependencies = [
     'beautifulsoup4',
     'requests',
     'search-engine-parser',
-    'matplotlib'
+    'matplotlib',
+    'pandas'
 ]
