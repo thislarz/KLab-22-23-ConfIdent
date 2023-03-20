@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from kgl_event_prediction.event import Event
-
+from difflib import SequenceMatcher
 
 class EventEvaluator(object):
     """
@@ -62,3 +62,13 @@ class EventEvaluator(object):
 
         if self.event.acronym.lower().find(element_content) != -1 or element_content.find(self.event.acronym) != -1:
             return True
+
+    @staticmethod
+    def similarity(a: str, b: str):
+        """
+        :params a str: input that shall be compared to b
+        :params b str: what a shall be compared against
+        :return: The similarity between test and truth
+        """
+        diff = SequenceMatcher(a=a, b=b).ratio()
+        return diff

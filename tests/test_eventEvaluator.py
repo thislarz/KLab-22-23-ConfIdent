@@ -59,7 +59,31 @@ class TestEventEvaluator(unittest.TestCase):
                     expected.lower(),
                     msg
                 )
-
+    def test_similarity(self):
+        a = "The 43th Conference for Bamboo growth 2017"
+        b = "The 43th Conference for Bamboo growth 2018"
+        sim = EventEvaluator.similarity(a, b)
+        print(sim)
+        print(EventEvaluator.similarity(
+            "Bamboo is often associated with Pandas",
+            "The 43th Conference for Bamboo growth 2018"
+        ))
+        print(EventEvaluator.similarity(
+            "The 3rd Conference for growth 2018",
+            "The 43th Conference for Bamboo growth 2018"
+        ))
+        print(EventEvaluator.similarity(
+            "National Conference on Artificial Intelligence -- AAAI 1983 -- Hongkong",
+            "National Conference on Artificial Intelligence"
+        ))
+        print(EventEvaluator.similarity(
+            "AAAI 1983",
+            "AAAI"
+        ))
+        print(EventEvaluator.similarity(
+            "AAAI 1983",
+            "IAAU 1983"
+        ))
 
 if __name__ == '__main__':
     unittest.main()
