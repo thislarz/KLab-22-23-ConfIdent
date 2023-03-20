@@ -9,12 +9,17 @@ class SimpleEventPredictor(EventPredictor):
     """
     Simple Event Predictor is used to guess events of a series
     """
-    def __init__(self):
+    def __init__(self, series_list = []):
         super().__init__()
+        self.initialize(series_list)
 
-    def initialize(self, series_id: str):
-        self.series_id = series_id
-        self.series_list = DbUtil.get_events_by_series_id(self.series_id)
+    def initialize(self, series_list):
+        """
+        :param series_list: list of Events from a given Series for which the next shall be guessed;
+
+        This method should be used when the guess should be performed on a new series
+        """
+        self.series_list = series_list
         try:
             self.anticipated_next_year = self.anticipate_year_of_next_event(self.series_list)
             self.predicted_next_event = self.predict_next_event(self.series_list[0], self.anticipated_next_year)
@@ -117,3 +122,11 @@ class SimpleEventPredictor(EventPredictor):
 # print(event_name.string)
 
 # print(event_page.prettify())  # very nice
+
+
+if __name__ == "__main__":
+    db = DbUtil('event_orclone')
+    event_series = db.get_series_by_acronym('ISWC')
+    sev = SimpleEventPredictor(event_series)
+    next_event = sev.get_next_event()
+    print(next_event)

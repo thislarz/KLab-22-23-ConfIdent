@@ -7,24 +7,27 @@ from kgl_event_prediction.utils import *
 
 class MultiGuessEventPredictor(EventPredictor):
 
-    def __init__(self):
+    def __init__(self, series_list = []):
         super().__init__()
-        self.last_event = None
-        self.next_event = None
-        self.next_year = 0
+        self.initialize(series_list)
 
-    def initialize(self, series_id: str = "", acronym: str = ""):
+    def initialize(self, series_list):
         """
-        is initialized by passing an acronym of a conference
+        :param series_list: list of Events from a given Series for which the next shall be guessed;
+
+        This method should be used when the guess should be performed on a new series
         """
-        # loads event by acronym
-        db = DbUtil(table="event_orclone")
-        event = db.get_event_by_acronym(acronym=acronym)
+        self.series_list = series_list
 
         # updates the class attributes
-        self.last_event = event
-        self.next_year = self.get_anticipated_next_year()
-        self.next_event = self.predict_next_event(self.last_event, self.next_year)
+        if len(self.series_list) >= 1:
+            self.last_event = series_list[0]
+            self.next_year = self.get_anticipated_next_year()
+            self.next_event = self.predict_next_event(self.last_event, self.next_year)
+        else:
+            self.last_event = Event()
+            self.next_year = 0
+            self.next_event = Event()
 
     def predict_next_event(self, proceeding: Event, first_anticipated_year: int):
         """
@@ -121,8 +124,9 @@ class MultiGuessEventPredictor(EventPredictor):
 
 
 if __name__ == "__main__":
-    mgep = MultiGuessEventPredictor()
-    mgep.initialize(acronym="AAMAS 2016")
+    db = DbUtil("event_orclone")
+    event_list = db.get_series_by_acronym('AAMAS')
+    mgep = MultiGuessEventPredictor(event_list)
     print(mgep.get_last_event(), "last")
     print(mgep.get_next_event(), "next")
     print(mgep.get_summery())
