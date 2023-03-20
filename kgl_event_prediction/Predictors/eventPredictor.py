@@ -1,3 +1,5 @@
+from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
+
 
 class EventPredictor(object):
     """
@@ -35,5 +37,15 @@ class EventPredictor(object):
 
     def get_summery(self):
         """
-        is supposed to evaluate the guess and return the prediction results as true or false
+        is supposed to evaluate the guess and return the prediction results as dictionary
+
+        return {
+            "title similarity": 0.93,
+            "year check": True
+            "verdict": gut / meh / trash
+            "confidence": [0.0 : 1:0]
+        }
         """
+
+        event_evaluator = EventEvaluator(self.predicted_next_event)
+        event_evaluator.summarize_event()

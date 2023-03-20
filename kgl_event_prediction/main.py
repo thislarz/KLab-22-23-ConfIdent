@@ -10,6 +10,7 @@ from kgl_event_prediction.Analysis.seriesAnalysis import SeriesAnalysis
 
 from kgl_event_prediction.Predictors.simpleEventPredictor import SimpleEventPredictor
 
+
 # sets up the Logger
 logger = Logger(name="Steve")
 logger.setLevel(DEBUG)
@@ -27,7 +28,6 @@ seriesAnalysis = SeriesAnalysis()
 
 # evaluates the event_predictor on all series
 # seriesAnalysis.rate_event_prediction(event_predictor=simple_ev)
-
 
 # sets up the eventPredictor with a series
 simple_ev.initialize(seriesId_1)

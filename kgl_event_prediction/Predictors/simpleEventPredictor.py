@@ -103,14 +103,6 @@ class SimpleEventPredictor(EventPredictor):
         return self.series_list[0]
 
     def get_summary(self):
-        """
-        return {
-            "title similarity": 0.93,
-            "year check": True
-            "verdict": gut / meh / trash
-            "confidence": [0.0 : 1:0]
-        }
-        """
         event_evaluator = EventEvaluator(self.predicted_next_event)
         if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid("h1") or event_evaluator.is_element_valid("h2"):
             return True

@@ -48,6 +48,23 @@ class EventEvaluator(object):
 
         return element_content.lower()
 
+    def summarize_event(self):
+        title = EventEvaluator.get_element_content_from_url(self.event.homepage, "title")
+        h1 = EventEvaluator.get_element_content_from_url(self.event.homepage, "h1")
+        title_diff = EventEvaluator.similarity(title, self.event.title)
+        h1_diff = EventEvaluator.similarity(h1, self.event.title)
+        if title_diff < h1_diff:
+            title = h1
+            title_diff = h1_diff
+        summary = {
+            "title_similarity": title_diff,
+            "year_check": True,
+            "acronym_check": True,
+            "verdict": ""
+        }
+
+
+
     def is_element_valid(self, html_element):
         if self.event.homepage is None or self.event.homepage == "":
             return False

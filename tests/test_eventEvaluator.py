@@ -1,6 +1,7 @@
 import unittest
 
 from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
+from kgl_event_prediction.event import Event
 
 
 class TestEventEvaluator(unittest.TestCase):
@@ -59,6 +60,21 @@ class TestEventEvaluator(unittest.TestCase):
                     expected.lower(),
                     msg
                 )
+
+    @unittest.skip
+    def test_summarize_event(self):
+        predicted_event = Event(title='18th International Conference on Autonomous Agents and Multiagent Systems',
+                                year='2019', acronym='AAMAS 2019', homepage='http://aamas2019.encs.concordia.ca/')
+        event_evaluator = EventEvaluator(predicted_event)
+        summary = event_evaluator.summarize_event()
+        test_dic = {
+            "title_similarity": 0.13333333333333333,
+            "year_check": True,
+            "acronym_check": True,
+            "verdict": "okay"
+        }
+        self.assertEqual(summary, test_dic)
+
     def test_similarity(self):
         a = "The 43th Conference for Bamboo growth 2017"
         b = "The 43th Conference for Bamboo growth 2018"
@@ -83,6 +99,10 @@ class TestEventEvaluator(unittest.TestCase):
         print(EventEvaluator.similarity(
             "AAAI 1983",
             "IAAU 1983"
+        ))
+        print(EventEvaluator.similarity(
+            "18th International Conference on Autonomous Agents and Multiagent Systems",
+            "AAMAS 2019 - Home"
         ))
 
 if __name__ == '__main__':
