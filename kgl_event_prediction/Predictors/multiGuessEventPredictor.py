@@ -82,10 +82,7 @@ class MultiGuessEventPredictor(EventPredictor):
 
         return anticipated_event
 
-
-
-
-    def get_next_event(self):
+    def get_predicted_event(self):
         return self.next_event
 
     def get_last_event(self):
@@ -94,19 +91,6 @@ class MultiGuessEventPredictor(EventPredictor):
     def get_anticipated_next_year(self):
         # naive increment by one approach
         return self.last_event.year + 1
-
-    def get_summery(self):
-        event_evaluator = EventEvaluator(self.next_event)
-
-        title = event_evaluator.get_element_content_from_url(self.next_event.homepage, "title")
-        # find = title.find(self.next_event.title)
-        # print("webtitle :", title, "event_title: ", self.next_event.title.lower())
-
-        if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid(
-                "h1") or event_evaluator.is_element_valid("h2"):
-            return True
-        else:
-            return False
 
     @staticmethod
     def get_summery_of_event(event: Event):

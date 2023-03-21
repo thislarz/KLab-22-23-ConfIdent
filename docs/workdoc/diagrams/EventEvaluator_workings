@@ -1,0 +1,20 @@
+flowchart TD
+    PE[Event: title,acronym,homepage,year]
+    EV[EventEvaluator]
+    C1{title check}
+    HP[Homepage from Web]
+    C2{acronym check}
+    C3{year check}
+    R[Summary]
+    H1[ ]
+
+    PE --> EV
+    EV -->|request| HP
+    HP -->|web_title, web_h1| H1
+    H1 --> |strip acronym| C2
+    H1 --> C3
+    H1 --> C1
+    EV -->|acronym, year| H1
+    C1 --> R
+    C2 --> R
+    C3 --> R

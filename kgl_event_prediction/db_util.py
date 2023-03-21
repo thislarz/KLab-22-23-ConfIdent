@@ -11,14 +11,14 @@ from tabulate import tabulate
 class DbUtil(object):
 
     def __init__(self, table: str):
-        self.tabel = table
+        self.table = table
 
     def get_all_events(self):
         """
         queries all events from the initialized table and returns a list of Events (Dataclass objects)
         """
         query = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getAllEvents.sql").read()
-        query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
+        query = replace_var_in_sql(query, "VARIABLE1", self.table)
         res = DbUtil.query_corpus_db(query)
 
         # converts dict event list to list of Events
@@ -34,7 +34,7 @@ class DbUtil(object):
         query_source = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getEventByField.sql").read()
 
         # fills in the variable fields
-        query_acr = replace_var_in_sql(query_source, "VARIABLE1", self.tabel)
+        query_acr = replace_var_in_sql(query_source, "VARIABLE1", self.table)
         query_acr = replace_var_in_sql(query_acr, "VARIABLE2", 'acronym')
         query_acr = replace_var_in_sql(query_acr, "VARIABLE3", acronym)
 
@@ -56,16 +56,16 @@ class DbUtil(object):
         works on event_or (needs to be configured to work with a queries with a year field)
         """
         # loads the query
-        if self.tabel == "event_or":
+        if self.table == "event_or":
             query = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getLastXEvents.sql").read()
-        elif self.tabel == "event_orclone":
+        elif self.table == "event_orclone":
             query = open(str(pathlib.Path(__file__).parent)+"/resources/queries/getLastXEventsORCLONE.sql").read()
         else:
             query = ""
-            print("WARNING - Tried running get_last_x_events on "+self.tabel+" which is not allowed.")
+            print("WARNING - Tried running get_last_x_events on "+self.table+" which is not allowed.")
 
         # sets the table for the query (currently only event_or works or similar)
-        query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
+        query = replace_var_in_sql(query, "VARIABLE1", self.table)
 
         # creates query snippet that selects only the recent entries
         years = ""
@@ -73,11 +73,11 @@ class DbUtil(object):
         for i in range(0, last_years):
             temp_year = now - i
 
-            if self.tabel == "event_or":
+            if self.table == "event_or":
                 years += "    startDate LIKE '"+str(temp_year)+"%'"
                 if i != last_years-1:
                     years += "OR \n"
-            elif self.tabel == "event_orclone":
+            elif self.table == "event_orclone":
                 years += " year LIKE "+str(temp_year)+" "
                 if i != last_years-1:
                     years += "OR \n"
@@ -209,7 +209,7 @@ class DbUtil(object):
         query = open(str(pathlib.Path(__file__).parent) + "/resources/queries/getSeriesByAcronym.sql").read()
 
         # parameterize Query
-        query = replace_var_in_sql(query, "VARIABLE1", self.tabel)
+        query = replace_var_in_sql(query, "VARIABLE1", self.table)
         query = replace_var_in_sql(query, "VARIABLE2", field_name)
         query = replace_var_in_sql(query, "VARIABLE3", acronym)
 
@@ -227,11 +227,38 @@ class DbUtil(object):
         events = self.sort_events_by_year(events)
         return events
 
-    def get_all_unique_series_ids(self):
+    def get_all_series_by_acronym(self, acronym_list: list):
+        series_list = []
+        for acro in acronym_list:
+            series = self.get_series_by_acronym(acro)
+            if series:
+                series_list.append(series)
+
+        return series_list
+
+    def get_all_striped_acronyms(self, field_name: str = "acronym"):
+        query = open(str(pathlib.Path(__file__).parent) + "/resources/queries/getAllDistinct.sql").read()
+        query = replace_var_in_sql(query, 'VARIABLE1', self.table)
+        query = replace_var_in_sql(query, 'VARIABLE2', field_name)
+        # execute query
+        res = DbUtil.query_corpus_db(query)
+
+        striped_list = []
+
+        for x in res:
+            if x[field_name] is None:
+                continue
+            striped = strip_acronym(x[field_name])
+            if striped not in striped_list:
+                striped_list.append(striped)
+        return striped_list
+
+    @staticmethod
+    def get_all_unique_series_ids():
         """
         :return: list of all wikidata events as list of strings
         """
-        query = open("resources/queries/getEventInSeriesId.sql").read()
+        query = open(str(pathlib.Path(__file__).parent) + "/resources/queries/getEventInSeriesId.sql").read()
         event_series_id_list = DbUtil.query_corpus_db(query)
 
         # convert query results from dict with one entry to strings

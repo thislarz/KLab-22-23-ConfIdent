@@ -1,9 +1,14 @@
+import json
+import pathlib
+from datetime import time
 from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
 import sys
 
 from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
 from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
+from kgl_event_prediction.Predictors.multiGuessEventPredictor import MultiGuessEventPredictor
+from kgl_event_prediction.Predictors.simpleEventPredictor import SimpleEventPredictor
 from kgl_event_prediction.resources.ordinalNumbers import OrdinalNumbers
 from kgl_event_prediction.utils import *
 from kgl_event_prediction.db_util import DbUtil
@@ -18,24 +23,25 @@ class SeriesAnalysis(object):
         self.id_list = []
         self.series_list = []
 
-    def load_series(self):
+    def load_series(self, source: str, table: str):
         """
         runs queries to load all series entries (takes some time)
         """
-        self.id_list = DbUtil.get_all_unique_series_ids()
+        if source == "series_id" and table == "event_wikidata":
+            id_list = DbUtil.get_all_unique_series_ids()
 
-        for i in self.id_list:
-            temp = DbUtil.get_events_by_series_id(i)
-            temp = [i] + temp
-            self.series_list.append(temp)
+            for i in id_list:
+                temp = DbUtil.get_events_by_series_id(i)
+                self.series_list.append(temp)
+        elif source == "acronym":
+            db = DbUtil(table)
+            acro_list = db.get_all_striped_acronyms()
+            self.series_list = db.get_all_series_by_acronym(acro_list)
 
     def all_series_analytics(self):
         """
         :print: analytic data for the series in the console (configured to work on event_wikidata)
         """
-        # if series are not preloaded, load series
-        if len(self.series_list) == 0:
-            self.load_series()
 
         count_total_entries = 0
         count_len_max3 = 0
@@ -49,7 +55,7 @@ class SeriesAnalysis(object):
             elif len(i) - 1 >= 10:
                 count_len_min10 += 1
 
-            if len(i) > 1 and i[1].homepage is not None:
+            if len(i) > 0 and i[0].homepage is not None:
                 count_homepage += 1
 
         avg_series_length = count_total_entries / len(self.series_list)
@@ -58,6 +64,43 @@ class SeriesAnalysis(object):
         print("series with 10 or more: ", count_len_min10, str(count_len_min10 / len(self.series_list) * 100) + "%")
         print("number of series: ", len(self.series_list))
         print("series with homepage: ", count_homepage, str(count_homepage / len(self.series_list) * 100) + "%")
+
+    def homepage_analytics(self):
+        count_series = len(self.series_list)
+        url_containing_year_4dig = 0
+        url_containing_year_2dig = 0
+        url_containing_striped_acronym = 0
+        empty_series = 0
+        no_urls = 0
+        for event_series in self.series_list:
+            if event_series:
+                url = event_series[0].homepage
+                year = event_series[0].year
+                short_year = int(event_series[0].year/100)
+                acro_striped = strip_acronym(event_series[0].acronym)
+
+                if type(url) is not str:
+                    no_urls += 1
+                    continue
+                if url.find(str(year)) != -1:
+                    url_containing_year_4dig += 1
+                elif url.find(str(short_year)) != -1:
+                    url_containing_year_2dig += 1
+                if type(acro_striped) is str and url.find(acro_striped) != -1:
+                    url_containing_striped_acronym += 1
+            else:
+                empty_series += 1
+        res = {
+            "count_series": count_series,
+            "count_year_4dig": url_containing_year_4dig,
+            "count_year_2dig": url_containing_year_2dig,
+            "count_acronym": url_containing_striped_acronym,
+            "empty_series": empty_series,
+            "no_urls": no_urls
+        }
+        print(res)
+        return res
+
 
     @staticmethod
     def evaluate_dates_in_field(event_list: list):
@@ -126,60 +169,136 @@ class SeriesAnalysis(object):
         print(EventEvaluator.get_title_from_url(next_event.homepage), "<-> web title")
         print(conf_event, "<-> is title valid? ")
 
-    def rate_event_prediction(self, event_predictor: EventPredictor):
-        """
-        - input: EventPredictor
-        - output: IDs, predicted event, and summary (title, homepage, acronym, confidence...)
-        """
+    def rate_event_prediction(self, event_predictor: EventPredictor, threshold: float = 0.8):
+        total_events = len(self.series_list)
+        empty_series = 0
+        title_similarity = []
+        title_similarity_sampling_size = 20
+        for i in range(0, title_similarity_sampling_size):
+            title_similarity.append(0)
+        year_checks = 0
+        acronym_checks = 0
+        verdicts = [0, 0, 0, 0]
 
-        # if series are not preloaded, load series
-        if len(self.series_list) == 0:
-            self.load_series()
+        # run prediction on all series
+        for i in range(0,len(self.series_list)):
 
-        count_events = 0
-        count_events_not_null = 0
-        count_success = 0
-        count_events_with_homepages = 0
-        for i in self.id_list:
-            count_events += 1
+            print(str(i)+" out of "+str(total_events)+" completed.")
 
-            # event_predictor = SimpleEventPredictor(i)
-            event_predictor.initialize(i)
-            next_event = event_predictor.get_next_event()
-
-
-
-            if next_event is None:
+            if not self.series_list[i]:
+                empty_series += 1
                 continue
-            else:
+            event_predictor.initialize(self.series_list[i])
+            summary = event_predictor.get_summery(threshold=threshold)
 
-                if next_event.homepage is not None and next_event.homepage != "":
-                    count_events_with_homepages += 1
+            # updated results
+            i = int(summary['title_similarity']*title_similarity_sampling_size)
+            if i == len(title_similarity):
+                i = i-1
+            title_similarity[i] += 1
 
-                count_events_not_null += 1
-                print("ID: ", i)
-                self.logger.debug(tabulate([next_event], headers="keys"))
-                event_success = event_predictor.get_summary()
-                print("Title confirmation worked? ", event_success)
-                if event_success:
-                    count_success += 1
+            if summary['year_check']:
+                year_checks += 1
 
-        print("-------------------- Summary:")
-        print("Events: ", count_events)
-        print("Events not null: ", count_events_not_null)
-        print("Events with homepage: ", count_events_with_homepages, " - %",
-              round(count_events_with_homepages / count_events_not_null, 2)*100)
-        print("Successes: ", count_success)
-        print("Success rate: ", count_success/count_events_not_null)
-        print("Success*: ", count_success/count_events_with_homepages)
+            if summary['acronym_check']:
+                acronym_checks += 1
 
-        res_dict = {
-            "total_events": count_events,
-            "events_not_null": count_events_not_null,
-            "successes": count_success,
-            "success_rate": count_success/count_events_not_null
+            if summary['verdict'] == "good":
+                verdicts[0] += 1
+            elif summary['verdict'] == "okay":
+                verdicts[1] += 1
+            elif summary['verdict'] == "bad":
+                verdicts[2] += 1
+            elif summary['verdict'] == "not_found":
+                verdicts[3] += 1
+
+            if i % 20 == 0:
+                print({
+                    "total_events": total_events,
+                    "empty_series": empty_series,
+                    "title_similarity": title_similarity,
+                    "year_checks": year_checks,
+                    "acronym_checks": acronym_checks,
+                    "verdicts": verdicts
+                })
+        res = {
+            "total_events": total_events,
+            "empty_series": empty_series,
+            "title_similarity": title_similarity,
+            "year_checks": year_checks,
+            "acronym_checks": acronym_checks,
+            "verdicts": verdicts
         }
-        return res_dict
+        SeriesAnalysis.save_to_json(res, name="rate_event_predictor", append=True)
+        print(res)
+        return res
+
+    def rate_event_evaluator(self, threshold: float = 0.8):
+        total_events = len(self.series_list)
+        empty_series = 0
+        title_similarity = []
+        title_similarity_sampling_size = 20
+        for i in range(0, title_similarity_sampling_size):
+            title_similarity.append(0)
+        year_checks = 0
+        acronym_checks = 0
+        verdicts = [0, 0, 0, 0]
+
+        # run prediction on all series
+        for i in range(0, len(self.series_list)):
+
+            print(str(i) + " out of " + str(total_events) + " completed.")
+
+            if not self.series_list[i]:
+                empty_series += 1
+                continue
+
+            # gets first event
+            event = self.series_list[i][0]
+            event_evaluator = EventEvaluator(event)
+            summary = event_evaluator.summarize_event(threshold=threshold)
+
+            # updated results
+            i = int(summary['title_similarity'] * title_similarity_sampling_size)
+            if i == len(title_similarity):
+                i = i - 1
+            title_similarity[i] += 1
+
+            if summary['year_check']:
+                year_checks += 1
+
+            if summary['acronym_check']:
+                acronym_checks += 1
+
+            if summary['verdict'] == "good":
+                verdicts[0] += 1
+            elif summary['verdict'] == "okay":
+                verdicts[1] += 1
+            elif summary['verdict'] == "bad":
+                verdicts[2] += 1
+            elif summary['verdict'] == "not_found":
+                verdicts[3] += 1
+
+            if i % 20 == 0:
+                print({
+                    "total_events": total_events,
+                    "empty_series": empty_series,
+                    "title_similarity": title_similarity,
+                    "year_checks": year_checks,
+                    "acronym_checks": acronym_checks,
+                    "verdicts": verdicts
+                })
+        res = {
+            "total_events": total_events,
+            "empty_series": empty_series,
+            "title_similarity": title_similarity,
+            "year_checks": year_checks,
+            "acronym_checks": acronym_checks,
+            "verdicts": verdicts
+        }
+        SeriesAnalysis.save_to_json(res, name="rate_event_evaluator", append=True)
+        print(res)
+        return res
 
     @staticmethod
     def or_analytics(last_years: int):
@@ -371,14 +490,51 @@ class SeriesAnalysis(object):
         query = replace_var_in_sql(query, "VARIABLE2", table)
         return DbUtil.query_corpus_db(query)[0]["COUNT("+column+")"]
 
+    @staticmethod
+    def save_to_json(res: dict, name: str, append: bool = True):
+        """
+        @param res: is a dict with the analysis results
+        @param name: name under which the file should be saved
+        """
+
+        path = str(pathlib.Path(__file__).parent.parent) + "/resources/analysis_results/" + name+".json"
+
+        json_object = json.dumps(res, indent=4)
+
+        if not append:
+            try:
+                with open(path, "w") as outfile:
+                    outfile.write(json_object)
+            except FileNotFoundError:
+                with open(path, "x") as outfile:
+                    outfile.write(json_object)
+        else:
+            cur = ""
+            try:
+                with open(path, "r") as outfile:
+                    cur = outfile.read()
+            except FileNotFoundError:
+                cur = ""
+
+            if cur != "" and len(cur) > 2:
+                cur = cur[:len(cur)-2]
+                cur += ',\n'
+            else:
+                cur += "[\n"
+            cur += str(json_object)
+            cur += "\n]"
+
+            try:
+                with open(path, "w") as outfile:
+                    outfile.write(cur)
+            except FileNotFoundError:
+                with open(path, "x") as outfile:
+                    outfile.write(cur)
+
 
 if __name__ == '__main__':
-    db = DbUtil('event_wikidata')
-    event_list = db.get_all_events()
+    sa = SeriesAnalysis()
+    sa.load_series('acronym', 'event_wikidata')
+    sa.rate_event_prediction(event_predictor=MultiGuessEventPredictor(), threshold=0.8)
 
-    table = "event_orclone"
-    column = "wikidataId"
-    title = "title"
-    print(SeriesAnalysis.count_column_in_table(table, column), ": in "+table + " in " + column)
-    print(SeriesAnalysis.count_column_in_table(table, title), ": in " + table + " in " + title)
 

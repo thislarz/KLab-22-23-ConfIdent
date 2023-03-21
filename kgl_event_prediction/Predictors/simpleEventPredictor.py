@@ -93,7 +93,7 @@ class SimpleEventPredictor(EventPredictor):
 
         return anticipated_event
 
-    def get_next_event(self):
+    def get_predicted_event(self):
         return self.predicted_next_event
 
     def get_anticipated_next_year(self):
@@ -101,13 +101,6 @@ class SimpleEventPredictor(EventPredictor):
 
     def get_last_event(self):
         return self.series_list[0]
-
-    def get_summary(self):
-        event_evaluator = EventEvaluator(self.predicted_next_event)
-        if event_evaluator.is_element_valid("title") or event_evaluator.is_element_valid("h1") or event_evaluator.is_element_valid("h2"):
-            return True
-        else:
-            return False
 
 # If you have a html file in your project
 # with open("website.html", "r") as f:  # f is a file

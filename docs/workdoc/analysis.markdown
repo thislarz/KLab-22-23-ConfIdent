@@ -239,3 +239,49 @@ Methodology: This used SeriesAnalysis.count_column_in_table() which uses countSe
 246 : in event_orclone in wikidataId
 
 ---
+
+### event_orclone fetched and grouped by acronym - all_series_analytics (21.03.2023)
+
+Methodology: fetched all series by acronym then updated all_series_analysis
+
+avg_series_length 1.1381644934804414
+
+series with 3 or less:  3670 92.02607823470412%
+
+series with 10 or more:  107 2.683049147442327%
+
+number of series:  3988
+
+series with homepage:  3774 94.63390170511533%
+
+### event_wikidata check for differences in updated all_series_analytics (21.03.2023)
+
+avg_series_length 2.491994177583697
+
+series with 3 or less:  1590 77.14701601164484%
+
+series with 10 or more:  87 4.2212518195050945%
+
+number of series:  2061
+
+series with homepage:  88 4.269771955361476%
+
+### homepage analysis (21.03.2023)
+
+event_wikidata series by seriesID
+
+{'count_series': 2061, 'count_year_4dig': 71, 'count_year_2dig': 1, 'count_acronym': 3, 'empty_series': 1, 'no_urls': 1972}
+
+series with urls = 89
+
+event_wikidata series by acronym
+
+{'count_series': 1961, 'count_year_4dig': 66, 'count_year_2dig': 4, 'count_acronym': 5, 'empty_series': 0, 'no_urls': 1876}
+
+event_orclone series by acronym
+
+{'count_series': 3988, 'count_year_4dig': 1569, 'count_year_2dig': 78, 'count_acronym': 377, 'empty_series': 0, 'no_urls': 214}
+
+series with url = 3774
+
+share with 4 digit years = 41,5739%
