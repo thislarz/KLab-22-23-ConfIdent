@@ -33,7 +33,7 @@ seriesAnalysis = SeriesAnalysis()
 simple_ev.initialize(seriesId_1)
 
 # predicts the next event
-event = simple_ev.get_next_event()
+event = simple_ev.predicted_next_event
 print(event)
 
 """
