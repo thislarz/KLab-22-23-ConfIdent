@@ -211,7 +211,7 @@ class DbUtil(object):
         # parameterize Query
         query = replace_var_in_sql(query, "VARIABLE1", self.table)
         query = replace_var_in_sql(query, "VARIABLE2", field_name)
-        query = replace_var_in_sql(query, "VARIABLE3", acronym)
+        query = replace_var_in_sql(query, "VARIABLE3", acronym.upper())
 
         # execute query
         res = DbUtil.query_corpus_db(query)
@@ -222,7 +222,7 @@ class DbUtil(object):
         for queried_event in res:
             temp = DbUtil.convert_to_event(queried_event)
             acro = strip_acronym(temp.acronym)
-            if acro == acronym:
+            if acro.upper() == acronym.upper():
                 events.append(temp)
         events = self.sort_events_by_year(events)
         return events
