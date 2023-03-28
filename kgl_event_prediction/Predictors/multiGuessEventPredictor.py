@@ -78,7 +78,7 @@ class MultiGuessEventPredictor(EventPredictor):
         except:
             acronym = ""
 
-        anticipated_event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
+        anticipated_event = Event(title=title, homepage=homepage, year=int(year), acronym=acronym)
 
         return anticipated_event
 
