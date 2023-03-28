@@ -9,8 +9,9 @@ class SimpleEventPredictor(EventPredictor):
     """
     Simple Event Predictor is used to guess events of a series
     """
-    def __init__(self, series_list = []):
+    def __init__(self, series_list=[], earliest_year=None):
         super().__init__()
+        self.earliest_year = datetime.now().year if earliest_year is None else earliest_year
         self.initialize(series_list)
 
     def initialize(self, series_list):
@@ -21,32 +22,33 @@ class SimpleEventPredictor(EventPredictor):
         """
         self.series_list = series_list
         try:
-            self.anticipated_next_year = self.anticipate_year_of_next_event(self.series_list)
+            self.anticipated_next_year, self.skipped_events = self.anticipate_year_of_next_event(self.series_list)
             self.predicted_next_event = self.predict_next_event(self.series_list[0], self.anticipated_next_year)
         except:
             self.anticipated_next_year = 0
             self.predicted_next_event = None
 
     def anticipate_year_of_next_event(self, list_of_events: list):
-        year1 = list_of_events[0].year
-        year2 = 0
 
-        # TODO handle case of only one event entry
-        # TODO handle case of half-yearly events ???!
-        # TODO handle case of outdated database entries
+        start_year = list_of_events[0].year
 
-        i = 0
-        while i < len(list_of_events)-1 and list_of_events[i].year == year1:
-            i += 1
+        if len(list_of_events) > 1:
+            year_increment = list_of_events[0].year - list_of_events[1].year
+        else:
+            # only 1 event? assume yearly
+            year_increment = 1
 
-        year2 = list_of_events[i].year
+        anticipated_year = start_year
+        skipped_events = 0
+        while True:
+            anticipated_year += year_increment
+            skipped_events += 1
 
-        anticipated_year = year1 + (year1 - year2)
-        return anticipated_year
+            if anticipated_year >= self.earliest_year:
+                break
 
-    #def number_increase(self, match):
-     #   num = int(match.group())
-      #  return str(num + 1)
+        return anticipated_year, skipped_events
+
 
     """
     Cases:
@@ -55,41 +57,43 @@ class SimpleEventPredictor(EventPredictor):
     3. last 2 digits of year
     4. roman numerals (very important)
     """
-    def predict_next_event(self, proceeding: Event, next_year: int):
+    def predict_next_event(self, previous_event: Event, next_year: int):
         title = ""
-        homepage = ""
+        homepage = None
         year = ""
         acronym = ""
 
-        preceding_year = str(proceeding.year)
+        previous_year = str(previous_event.year)
         year = str(next_year)
 
-        try:
-            title = proceeding.title.replace(preceding_year, year)
-            #if title == proceeding.title:
-             #   title = self.number_increase_in_string(proceeding.title)
-        except:
-            title = ""
+        if year in previous_event.title:
+            title = previous_event.title.replace(previous_year, year)
+        else:
+            title = number_increase_in_string(previous_event.title, inc=self.skipped_events)
 
-        try:
-            homepage = proceeding.homepage.replace(preceding_year, year)
-            if homepage == proceeding.homepage:
-                diff = int(year) - int(preceding_year)
-                for x in range(diff):
-                    homepage = number_increase_in_string(proceeding.homepage)
-        except:
-            homepage = ""
+            # rewrite number idioms
+            title = title.replace("1th", "1st")
+            title = title.replace("1nd", "1st")
+            title = title.replace("1rd", "1st")
+            title = title.replace("2st", "2nd")
+            title = title.replace("2th", "2nd")
+            title = title.replace("2rd", "2nd")
+            title = title.replace("3st", "3rd")
+            title = title.replace("3th", "3rd")
+            title = title.replace("3nd", "3rd")
 
-        try:
-            acronym = proceeding.acronym.replace(preceding_year, year)
-            if acronym == proceeding.acronym:
-                diff = int(year) - int(preceding_year)
-                for x in range(diff):
-                    acronym = number_increase_in_string(proceeding.acronym)
-        except:
-            acronym = ""
+        if previous_event.homepage is not None:
+            if previous_year in previous_event.homepage:
+                homepage = previous_event.homepage.replace(previous_year, year)
+            else:
+                homepage = number_increase_in_string(previous_event.homepage, inc=self.skipped_events)
 
-        anticipated_event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
+        if previous_year in previous_event.acronym:
+            acronym = previous_event.acronym.replace(previous_year, year)
+        else:
+            acronym = number_increase_in_string(previous_event.acronym, inc=self.skipped_events)
+
+        anticipated_event = Event(title=title, homepage=homepage, year=int(year), acronym=acronym)
 
         return anticipated_event
 

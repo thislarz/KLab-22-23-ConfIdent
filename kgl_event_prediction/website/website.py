@@ -2,17 +2,34 @@ import justpy as jp
 
 from kgl_event_prediction.Predictors.multiGuessEventPredictor import MultiGuessEventPredictor
 from kgl_event_prediction.Predictors.simpleEventPredictor import SimpleEventPredictor
-
+from kgl_event_prediction.db_util import DbUtil
 
 input_classes = "m-2 bg-gray-200 border-2 border-gray-200 rounded w-64 py-2 px-4 text-gray-700 focus:outline-none " \
                 "focus:bg-white focus:border-purple-500"
-p_classes = 'text-gray-500 m-2 p-2 h-32 text-xl border-2'
-check_classes = "m-2 bg-gray-200 border-2 border-gray-200 rounded w-40 py-2 px-4 text-gray-700 focus:outline-none " \
+p_classes = 'text-gray-500 m-2 p-2 text-xl border-2'
+check_classes = "m-2 border-2 border-gray-200 rounded w-1/2 py-2 px-4 text-gray-700 focus:outline-none " \
                 "focus:bg-white focus:border-purple-500"
+check_classes_by_state = {
+    'good': check_classes + " bg-green-500",
+    'okay': check_classes + " bg-yellow-400",
+    'bad': check_classes + " bg-red-500",
+    'not_found': check_classes + " bg-gray-400",
+}
 check_text_classes = "p-2 text-xl text-gray-500 w-64"
 select_classes = 'w-40 text-xl m-4 p-2 bg-white  border rounded'
 button_classes = 'bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full'
 link_classes = 'font-medium text-blue-600 underline dark:text-blue-500 hover:no-underline'
+
+def render_event(div, event):
+    if event is None:
+        div += jp.Div(text="not supported for this predictor")
+        return
+
+    div += jp.Div(text=f'Title: \"{event.title}\"')
+    div += jp.Div(text=f'Year: {event.year}')
+    homepage_div = jp.Div(text="Homepage: ")
+    homepage_div += jp.A(text=event.homepage, href=event.homepage, target='blank', classes=link_classes)
+    div += homepage_div
 
 
 class WebPagePredictor(jp.Div):
@@ -21,7 +38,7 @@ class WebPagePredictor(jp.Div):
         super(WebPagePredictor, self).__init__(**kwargs)
 
         self.event_predictor = "simple"
-        self.input_series = jp.Input(a=self, classes=input_classes, placeholder='Event Series ID')
+        self.input_series = jp.Input(a=self, classes=input_classes, value="iswc", placeholder='Event Acronym')
 
         # creating a dropdown menu to select predictor
         predictors = ['simple', 'multi guess']
@@ -34,12 +51,13 @@ class WebPagePredictor(jp.Div):
                                      on_click=self.on_click_predict)
 
         # fields to display events
-        self.div_current_event = jp.Div(a=self, text='Last event loading...', classes=p_classes)
-        self.div_results = jp.Div(a=self, text='Next event loading...', classes=p_classes)
+        self.div_last_known_event = jp.Div(a=self, text='Last event loading...', classes=p_classes)
+        self.div_next_event = jp.Div(a=self, text='Next event loading...', classes=p_classes)
+        self.div_next_next_event = jp.Div(a=self, text='Next next event loading...', classes=p_classes)
 
         # displays the evaluation (success/fail) of the prediction
-        self.p_check_text = jp.P(a=self, text="Prediction is correct? ", classes=check_text_classes)
-        self.p_check = jp.P(a=self, text="event loading...", classes=check_classes)
+        self.p_check_text = jp.P(a=self, text="Prediction Evaluation: ", classes=check_text_classes)
+        self.p_check = jp.P(a=self, text="event loading...", classes=check_classes_by_state['not_found'])
 
     def set_event_predictor(self, msg):
 
@@ -49,35 +67,55 @@ class WebPagePredictor(jp.Div):
             self.event_predictor = "multi guess"
 
     def on_click_predict(self, msg):
-        seriesId = self.input_series.value.strip()
-        self.div_results.text = 'Next event of: ' + seriesId
-        self.div_current_event.text = 'Last event of: ' + seriesId
+        seriesId = self.input_series.value.strip().upper()
+
+        self.div_last_known_event.delete()
+        self.div_next_event.delete()
+        self.div_next_next_event.delete()
+
+        self.div_last_known_event.text = 'Most recent known event of ' + seriesId
+        self.div_next_event.text = 'Predicted next event of ' + seriesId
+        self.div_next_next_event.text = 'Predicted next next event of ' + seriesId
+
+        print(f"predicting next event for {seriesId}")
 
         event_predictor = None
+        db = DbUtil('event_orclone')
+        event_series = db.get_series_by_acronym(seriesId)
+
+        if len(event_series) == 0:
+            s = f"Series '{seriesId}' does not exist"
+            self.div_next_event.text = s
+            self.div_last_known_event.text = s
+            return
 
         if self.event_predictor == "multi guess":
-            event_predictor = MultiGuessEventPredictor()
-            # sets up the eventPredictor with a series
-            event_predictor.initialize(acronym=seriesId)
+            event_predictor = MultiGuessEventPredictor(event_series)
+            next_event = event_predictor.next_event
+            next_next_event = None  # not supported
+            last_event = event_predictor.get_last_event()
         else:
-            event_predictor = SimpleEventPredictor()
-            # sets up the eventPredictor with a series
-            event_predictor.initialize(series_id=seriesId)
+            event_predictor = SimpleEventPredictor(event_series)
+            next_event = event_predictor.predicted_next_event
+            last_event = event_predictor.get_last_event()
 
-        # gets last event and its homepage link
-        last_event = event_predictor.get_last_event()
-        self.div_current_event.text += ' \"' + str(last_event.title) + '\" has taken place in year ' + \
-                                       str(last_event.year) + ', homepage: '
-        self.div_current_event += jp.A(text=last_event.homepage, href=last_event.homepage, target='blank',
-                                       classes=link_classes)
+            next_next_year = next_event.year + 1
+            event_predictor = SimpleEventPredictor(event_series, earliest_year=next_next_year)
+            next_next_event = event_predictor.predicted_next_event
 
-        # predicts the next event and its homepage link
-        event = event_predictor.get_next_event()
-        self.div_results.text += ' \"' + str(event.title) + '\" takes place in the year ' + str(event.year) + \
-                                 ', homepage: '
-        self.div_results += jp.A(text=event.homepage, href=event.homepage, target='blank', classes=link_classes)
+        # displays result
+        render_event(self.div_last_known_event, last_event)
+        render_event(self.div_next_event, next_event)
+        render_event(self.div_next_next_event, next_next_event)
 
-        self.p_check.text = event_predictor.get_summary()
+        summary = event_predictor.get_summery()
+        self.p_check.delete()
+        self.p_check.text = ""
+        self.p_check += jp.Div(text=f"Title Similarity: {summary['title_similarity']:.2f}")
+        self.p_check += jp.Div(text=f"Year OK? {'YES' if summary['year_check'] else 'NO'}")
+        self.p_check += jp.Div(text=f"Acronym OK? {'YES' if summary['acronym_check'] else 'NO'}")
+        self.p_check += jp.Div(text=f"Verdict: {summary['verdict']}")
+        self.p_check.classes = check_classes_by_state[summary['verdict']]
 
 
 def predictor_app(request):
