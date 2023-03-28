@@ -46,13 +46,13 @@ def remove_duplicates(element_list: list):
     return element_list
 
 
-def number_increase_in_string(string):
+def number_increase_in_string(string, inc=1):
     def number_increase(match):
         num = int(match.group())
-        return str(num + 1)
+        return str(num + inc)
 
     pattern = r'\d+'
-    return re.sub(pattern, number_increase, string)
+    return re.sub(pattern, number_increase, string, count=1)
 
 
 def strip_acronym(acro: str):
