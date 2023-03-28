@@ -136,3 +136,5 @@ dmypy.json
 Footer
 
 .idea
+
+EventCorpus.db
