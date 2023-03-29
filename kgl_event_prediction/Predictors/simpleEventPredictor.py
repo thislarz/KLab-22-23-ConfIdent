@@ -11,22 +11,22 @@ class SimpleEventPredictor(EventPredictor):
     """
     def __init__(self, series_list=[], earliest_year=None):
         super().__init__()
-        self.earliest_year = datetime.now().year if earliest_year is None else earliest_year
-        self.initialize(series_list)
+        self.initialize(series_list, earliest_year)
 
-    def initialize(self, series_list):
+    def initialize(self, series_list, earliest_year = None):
         """
         :param series_list: list of Events from a given Series for which the next shall be guessed;
 
         This method should be used when the guess should be performed on a new series
         """
+        self.earliest_year = datetime.now().year if earliest_year is None else earliest_year
         self.series_list = series_list
         try:
             self.anticipated_next_year, self.skipped_events = self.anticipate_year_of_next_event(self.series_list)
             self.predicted_next_event = self.predict_next_event(self.series_list[0], self.anticipated_next_year)
         except:
             self.anticipated_next_year = 0
-            self.predicted_next_event = None
+            self.predicted_next_event = Event()
 
     def anticipate_year_of_next_event(self, list_of_events: list):
 
@@ -46,7 +46,7 @@ class SimpleEventPredictor(EventPredictor):
 
             if anticipated_year >= self.earliest_year:
                 break
-
+        # print(list_of_events[0].acronym, skipped_events, anticipated_year, year_increment)
         return anticipated_year, skipped_events
 
 
@@ -66,8 +66,9 @@ class SimpleEventPredictor(EventPredictor):
         previous_year = str(previous_event.year)
         year = str(next_year)
 
-        if year in previous_event.title:
+        if previous_event.title is not None and previous_year in previous_event.title:
             title = previous_event.title.replace(previous_year, year)
+            # print(previous_year, year)
         else:
             title = number_increase_in_string(previous_event.title, inc=self.skipped_events)
 
@@ -86,7 +87,7 @@ class SimpleEventPredictor(EventPredictor):
             if previous_year in previous_event.homepage:
                 homepage = previous_event.homepage.replace(previous_year, year)
             else:
-                homepage = number_increase_in_string(previous_event.homepage, inc=self.skipped_events)
+                homepage = previous_event.homepage
 
         if previous_year in previous_event.acronym:
             acronym = previous_event.acronym.replace(previous_year, year)
@@ -125,5 +126,5 @@ if __name__ == "__main__":
     db = DbUtil('event_orclone')
     event_series = db.get_series_by_acronym('ISWC')
     sev = SimpleEventPredictor(event_series)
-    next_event = sev.get_next_event()
+    next_event = sev.get_predicted_event()
     print(next_event)

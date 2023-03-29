@@ -58,3 +58,15 @@ Success* (based on 3.79% websites): 0.3699
 {'total_events': 1961, 'empty_series': 0, 'title_similarity': [1901, 2, 7, 9, 7, 3, 8, 2, 0, 1, 1, 1, 2, 3, 2, 2, 4, 1, 3, 2], 'year_checks': 24, 'acronym_checks': 60, 'verdicts': [10, 50, 0, 1901]}
 
 #### Simple Event Predictor on orclone by acronym (29.03.2023) threshold 0.8
+
+---
+
+### Tasjas changes merged and fixed
+
+#### Simple Event Predictor on orclone by acronym (29.03.2023) threshold 0.8 (increment numbers in homepage if not year) on subset [0:200]
+
+{'total_events': 200, 'empty_series': 0, 'title_similarity': [68, 8, 18, 26, 31, 16, 3, 2, 2, 0, 3, 1, 1, 2, 3, 4, 2, 5, 4, 1], 'year_checks': 15, 'acronym_checks': 136, 'verdicts': [12, 124, 0, 64]}
+
+#### Simple Event Predictor on orclone by acronym (29.03.2023) threshold 0.8
+
+{'total_events': 1959, 'empty_series': 0, 'title_similarity': [1897, 1, 9, 8, 7, 3, 5, 2, 1, 1, 1, 0, 2, 3, 4, 2, 5, 1, 3, 4], 'year_checks': 27, 'acronym_checks': 62, 'verdicts': [11, 51, 0, 1897]}

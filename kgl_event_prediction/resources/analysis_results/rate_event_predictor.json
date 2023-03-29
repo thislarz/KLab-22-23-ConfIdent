@@ -270,5 +270,73 @@
         0,
         1901
     ]
+},
+{
+    "total_events": 200,
+    "empty_series": 0,
+    "title_similarity": [
+        68,
+        8,
+        18,
+        26,
+        31,
+        16,
+        3,
+        2,
+        2,
+        0,
+        3,
+        1,
+        1,
+        2,
+        3,
+        4,
+        2,
+        5,
+        4,
+        1
+    ],
+    "year_checks": 15,
+    "acronym_checks": 136,
+    "verdicts": [
+        12,
+        124,
+        0,
+        64
+    ]
+},
+{
+    "total_events": 1959,
+    "empty_series": 0,
+    "title_similarity": [
+        1897,
+        1,
+        9,
+        8,
+        7,
+        3,
+        5,
+        2,
+        1,
+        1,
+        1,
+        0,
+        2,
+        3,
+        4,
+        2,
+        5,
+        1,
+        3,
+        4
+    ],
+    "year_checks": 27,
+    "acronym_checks": 62,
+    "verdicts": [
+        11,
+        51,
+        0,
+        1897
+    ]
 }
 ]

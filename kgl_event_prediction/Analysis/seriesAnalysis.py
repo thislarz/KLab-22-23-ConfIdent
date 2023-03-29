@@ -170,8 +170,14 @@ class SeriesAnalysis(object):
         print(EventEvaluator.get_title_from_url(next_event.homepage), "<-> web title")
         print(conf_event, "<-> is title valid? ")
 
-    def rate_event_prediction(self, event_predictor: EventPredictor, threshold: float = 0.8, save: bool = False, save_file : str = "default_save_rate_event_predictor", starting_point: int = 0):
-        total_events = len(self.series_list[starting_point:])
+    def rate_event_prediction(self, event_predictor: EventPredictor, threshold: float = 0.8, save: bool = False,
+                              save_file: str = "default_save_rate_event_predictor", starting_point: int = 0,
+                              end_point: int = None):
+
+        if end_point is None or end_point > len(self.series_list):
+            end_point = len(self.series_list)
+
+        total_events = len(self.series_list[starting_point:end_point])
         empty_series = 0
         title_similarity = []
         title_similarity_sampling_size = 20
@@ -182,14 +188,14 @@ class SeriesAnalysis(object):
         verdicts = [0, 0, 0, 0]
 
         # run prediction on all series
-        for i in range(0,len(self.series_list[starting_point:])):
+        for i in range(0, len(self.series_list[starting_point:end_point])):
 
             print(str(i)+" out of "+str(total_events)+" completed.")
 
             if not self.series_list[i]:
                 empty_series += 1
                 continue
-            event_predictor.initialize(self.series_list[i])
+            event_predictor.initialize(self.series_list[i], earliest_year=self.series_list[i][0].year)
             summary = event_predictor.get_summery(threshold=threshold)
             save_dict = {
                 "last_event": dataclasses.asdict(event_predictor.get_last_event()),
@@ -546,8 +552,41 @@ class SeriesAnalysis(object):
 
 
 if __name__ == '__main__':
+    cases = [
+        (
+            "acronym",
+            'event_wikidata',
+            SimpleEventPredictor(),
+            0.8,
+            "simple_ev_wikidata230329"
+        ),
+        (
+            "acronym",
+            'event_orclone',
+            SimpleEventPredictor(),
+            0.8,
+            "simple_ev_orclone230329"
+        ),
+        (
+            "acronym",
+            'event_wikidata',
+            MultiGuessEventPredictor(prediction_iterations=3),
+            0.8,
+            "mgep_wikidata230329"
+        ),
+        (
+            "acronym",
+            'event_orclone',
+            MultiGuessEventPredictor(prediction_iterations=3),
+            0.8,
+            "mgep_orclone230329"
+        )
+    ]
+
     sa = SeriesAnalysis()
-    sa.load_series('acronym', 'event_orclone')
-    sa.rate_event_prediction(event_predictor=SimpleEventPredictor(), threshold=0.8, save_file="simple_ev_orclone230329", save=True, starting_point=0)
+    for acro, tabel, ep, threshold, save_file in [cases[1]]:
+        sa.load_series(acro, tabel)
+        sa.rate_event_prediction(event_predictor=ep, threshold=threshold,
+                                 save_file=save_file, save=True, starting_point=0)
 
 
