@@ -42,11 +42,12 @@ class SimpleEventPredictor(EventPredictor):
         year2 = list_of_events[i].year
 
         anticipated_year = year1 + (year1 - year2)
-        return anticipated_year
 
-    #def number_increase(self, match):
-     #   num = int(match.group())
-      #  return str(num + 1)
+        # for series that are one long we just increment by 1
+        if anticipated_year == year1:
+            anticipated_year += 1
+        return int(anticipated_year)
+
 
     """
     Cases:
@@ -89,7 +90,7 @@ class SimpleEventPredictor(EventPredictor):
         except:
             acronym = ""
 
-        anticipated_event = Event(title=title, homepage=homepage, year=year, acronym=acronym)
+        anticipated_event = Event(title=title, homepage=homepage, year=int(year), acronym=acronym)
 
         return anticipated_event
 

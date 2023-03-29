@@ -1,0 +1,16 @@
+flowchart TD
+    A[retrive html_title and \n html_h1 from homepage]
+    C1[title similarity check]
+    CA[check stripped acronym]
+
+    G(good)
+    N(not found)
+    O(okay)
+    B(bad)
+
+    A --> |no hompage reached or \n no html_title and no html_h1| N
+    A --> C1
+    C1 --> |> threshold| G
+    C1 --> |<= threshold| CA
+    CA --> | found | O
+    CA --> | not found | B

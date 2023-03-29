@@ -1,3 +1,4 @@
+import dataclasses
 import json
 import pathlib
 from datetime import time
@@ -169,8 +170,8 @@ class SeriesAnalysis(object):
         print(EventEvaluator.get_title_from_url(next_event.homepage), "<-> web title")
         print(conf_event, "<-> is title valid? ")
 
-    def rate_event_prediction(self, event_predictor: EventPredictor, threshold: float = 0.8):
-        total_events = len(self.series_list)
+    def rate_event_prediction(self, event_predictor: EventPredictor, threshold: float = 0.8, save: bool = False, save_file : str = "default_save_rate_event_predictor", starting_point: int = 0):
+        total_events = len(self.series_list[starting_point:])
         empty_series = 0
         title_similarity = []
         title_similarity_sampling_size = 20
@@ -181,7 +182,7 @@ class SeriesAnalysis(object):
         verdicts = [0, 0, 0, 0]
 
         # run prediction on all series
-        for i in range(0,len(self.series_list)):
+        for i in range(0,len(self.series_list[starting_point:])):
 
             print(str(i)+" out of "+str(total_events)+" completed.")
 
@@ -190,6 +191,13 @@ class SeriesAnalysis(object):
                 continue
             event_predictor.initialize(self.series_list[i])
             summary = event_predictor.get_summery(threshold=threshold)
+            save_dict = {
+                "last_event": dataclasses.asdict(event_predictor.get_last_event()),
+                "predicted_event": dataclasses.asdict(event_predictor.get_predicted_event()),
+                "summary": event_predictor.get_summery()
+            }
+
+            SeriesAnalysis.save_to_json(res=save_dict, folder_name=save_file, name=save_file+"_"+str(int(i/500)))
 
             # updated results
             i = int(summary['title_similarity']*title_similarity_sampling_size)
@@ -212,6 +220,7 @@ class SeriesAnalysis(object):
             elif summary['verdict'] == "not_found":
                 verdicts[3] += 1
 
+
             if i % 20 == 0:
                 print({
                     "total_events": total_events,
@@ -221,6 +230,7 @@ class SeriesAnalysis(object):
                     "acronym_checks": acronym_checks,
                     "verdicts": verdicts
                 })
+
         res = {
             "total_events": total_events,
             "empty_series": empty_series,
@@ -278,6 +288,9 @@ class SeriesAnalysis(object):
                 verdicts[2] += 1
             elif summary['verdict'] == "not_found":
                 verdicts[3] += 1
+
+
+
 
             if i % 20 == 0:
                 print({
@@ -491,13 +504,13 @@ class SeriesAnalysis(object):
         return DbUtil.query_corpus_db(query)[0]["COUNT("+column+")"]
 
     @staticmethod
-    def save_to_json(res: dict, name: str, append: bool = True):
+    def save_to_json(res: dict, name: str, folder_name : str = "", append: bool = True):
         """
         @param res: is a dict with the analysis results
         @param name: name under which the file should be saved
         """
 
-        path = str(pathlib.Path(__file__).parent.parent) + "/resources/analysis_results/" + name+".json"
+        path = str(pathlib.Path(__file__).parent.parent) + "/resources/analysis_results/"+folder_name + "/" + name+".json"
 
         json_object = json.dumps(res, indent=4)
 
@@ -534,7 +547,7 @@ class SeriesAnalysis(object):
 
 if __name__ == '__main__':
     sa = SeriesAnalysis()
-    sa.load_series('acronym', 'event_wikidata')
-    sa.rate_event_prediction(event_predictor=MultiGuessEventPredictor(), threshold=0.8)
+    sa.load_series('acronym', 'event_orclone')
+    sa.rate_event_prediction(event_predictor=SimpleEventPredictor(), threshold=0.8, save_file="simple_ev_orclone230329", save=True, starting_point=0)
 
 
