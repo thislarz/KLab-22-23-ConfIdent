@@ -56,22 +56,6 @@ def render_event(parent, type, event, summary, hide_if_empty=True):
         summary_div = jp.Div(a=card_div, classes=summary_classes)
         summary_div.text = f"Verdict {summary['verdict'].upper()} | Year {'OK' if summary['year_check'] else 'NOT OK'} | Acronym {'OK' if summary['acronym_check'] else 'NOT OK'} | Title Similarity: {summary['title_similarity']:.2f}"
 
-    return
-
-    div += jp.Div(text=f'Title: \"{event.title}\"')
-    div += jp.Div(text=f'Year: {event.year}')
-    homepage_div = jp.Div(text="Homepage: ")
-    homepage_div += jp.A(text=event.homepage, href=event.homepage, target='blank', classes=link_classes)
-    div += homepage_div
-
-    self.p_check.delete()
-    self.p_check.text = ""
-    self.p_check += jp.Div(text=f"Title Similarity: {summary['title_similarity']:.2f}")
-    self.p_check += jp.Div(text=f"Year OK? {'YES' if summary['year_check'] else 'NO'}")
-    self.p_check += jp.Div(text=f"Acronym OK? {'YES' if summary['acronym_check'] else 'NO'}")
-    self.p_check += jp.Div(text=f"Verdict: {summary['verdict']}")
-    self.p_check.classes = check_classes_by_state[summary['verdict']]
-
 
 class WebPagePredictor(jp.Div):
 
