@@ -7,8 +7,9 @@ from kgl_event_prediction.utils import *
 
 class MultiGuessEventPredictor(EventPredictor):
 
-    def __init__(self, series_list = []):
+    def __init__(self, series_list = [], prediction_iterations : int = 5):
         super().__init__()
+        self.prediction_iterations = prediction_iterations
         self.initialize(series_list)
 
     def initialize(self, series_list):
@@ -34,13 +35,32 @@ class MultiGuessEventPredictor(EventPredictor):
         @params proceeding: is the Event for which the next Event should be predicted
         """
         temp = proceeding
-        res_event = self.predict_primitive_next_event(temp, first_anticipated_year)
-        iteration = 1
-        while iteration < 4 and not MultiGuessEventPredictor.get_summery_of_event(res_event):
+        if temp.homepage == '':
+            return None
+
+        iteration = 0
+        res_event_list = []
+        while iteration < self.prediction_iterations:
             # print("Iteration: ", iteration)
-            res_event = self.predict_primitive_next_event(temp, first_anticipated_year+iteration)
+            # predict event for iteration
+            predicted_event = self.predict_primitive_next_event(temp, first_anticipated_year+iteration)
             iteration += 1
-        return res_event
+
+            # evaluate summary of event
+            summary = EventEvaluator(predicted_event).summarize_event()
+            if summary['verdict'] == "good" and summary['year_check']:
+                return predicted_event
+            else:
+                res_event_list.append((predicted_event, summary))
+
+        largest_similarity = 0
+        candidate, s = res_event_list[0]
+        for pred_event, summary in res_event_list:
+            if largest_similarity < summary['title_similarity']:
+                largest_similarity = summary['title_similarity']
+                candidate = pred_event
+
+        return candidate
 
     def predict_primitive_next_event(self, proceeding: Event, next_year: int):
         """
@@ -65,7 +85,7 @@ class MultiGuessEventPredictor(EventPredictor):
                 diff = int(year) - int(preceding_year)
                 for x in range(diff):
                     homepage = number_increase_in_string(proceeding.homepage)
-        except ValueError:
+        except ValueError and AttributeError:
             # print(homepage, "this is homepage")
             homepage = ""
 
@@ -109,8 +129,8 @@ class MultiGuessEventPredictor(EventPredictor):
 
 if __name__ == "__main__":
     db = DbUtil("event_orclone")
-    event_list = db.get_series_by_acronym('AAMAS')
+    event_list = db.get_series_by_acronym('AAAI')
     mgep = MultiGuessEventPredictor(event_list)
     print(mgep.get_last_event(), "last")
-    print(mgep.get_next_event(), "next")
+    print(mgep.get_predicted_event(), "next")
     print(mgep.get_summery())
