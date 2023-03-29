@@ -38,7 +38,7 @@ class WebPagePredictor(jp.Div):
         super(WebPagePredictor, self).__init__(**kwargs)
 
         self.event_predictor = "simple"
-        self.input_series = jp.Input(a=self, classes=input_classes, value="iswc", placeholder='Event Acronym')
+        self.input_series = jp.Input(a=self, classes=input_classes, placeholder='Event Acronym')
 
         # creating a dropdown menu to select predictor
         predictors = ['simple', 'multi guess']
@@ -94,10 +94,12 @@ class WebPagePredictor(jp.Div):
             next_event = event_predictor.next_event
             next_next_event = None  # not supported
             last_event = event_predictor.get_last_event()
+            summary = event_predictor.get_summery()
         else:
             event_predictor = SimpleEventPredictor(event_series)
             next_event = event_predictor.predicted_next_event
             last_event = event_predictor.get_last_event()
+            summary = event_predictor.get_summery()
 
             next_next_year = next_event.year + 1
             event_predictor = SimpleEventPredictor(event_series, earliest_year=next_next_year)
@@ -108,7 +110,6 @@ class WebPagePredictor(jp.Div):
         render_event(self.div_next_event, next_event)
         render_event(self.div_next_next_event, next_next_event)
 
-        summary = event_predictor.get_summery()
         self.p_check.delete()
         self.p_check.text = ""
         self.p_check += jp.Div(text=f"Title Similarity: {summary['title_similarity']:.2f}")
