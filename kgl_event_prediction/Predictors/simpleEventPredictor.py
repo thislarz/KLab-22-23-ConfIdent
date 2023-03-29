@@ -4,6 +4,8 @@ from kgl_event_prediction.utils import *
 from kgl_event_prediction.db_util import *
 from kgl_event_prediction.event import Event
 
+import statistics
+
 
 class SimpleEventPredictor(EventPredictor):
     """
@@ -33,9 +35,21 @@ class SimpleEventPredictor(EventPredictor):
         start_year = list_of_events[0].year
 
         if len(list_of_events) > 1:
-            year_increment = list_of_events[0].year - list_of_events[1].year
+            # to make the year_increment estimation more robust
+            # we compute a list of all consecutive year differences between conferences
+            # and take the median as the year_increment
+            year_diffs = []
+            for i in range(len(list_of_events) - 1):
+                year_diffs.append(list_of_events[i].year - list_of_events[i + 1].year)
+            print(f"year diffs: {year_diffs}")
+            year_increment = statistics.median(year_diffs)
+            print(f"decided for year increment: {year_increment}")
         else:
             # only 1 event? assume yearly
+            year_increment = 1
+
+        # make sure we don't run into an endless loop later
+        if year_increment < 1:
             year_increment = 1
 
         anticipated_year = start_year
