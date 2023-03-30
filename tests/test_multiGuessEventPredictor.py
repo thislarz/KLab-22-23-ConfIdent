@@ -15,13 +15,13 @@ class TestEventPredictor(unittest.TestCase):
             (
                 "ISWC",
                 "event_orclone",
-                Event(title='21th International Semantic Web Conference', year='2023', acronym='ISWC 2023', homepage='https://iswc2023.semanticweb.org/', series_id=''),
+                Event(title='21th International Semantic Web Conference', year=2023, acronym='ISWC 2023', homepage='https://iswc2023.semanticweb.org/', series_id=''),
                 "Unexpected Result for ISWC on event_orclone"
             ),
             (
                 "AAAI",
                 "event_orclone",
-                Event(title='Conferenece on Artificial Intelligence', year='2023', acronym='AAAI 2023', homepage='https://aaai.org/Conferences/AAAI-23/', series_id=''),
+                Event(title='Conferenece on Artificial Intelligence', year=2023, acronym='AAAI 2023', homepage='https://aaai.org/Conferences/AAAI-23/', series_id=''),
                 "Unexpected Result for AAAI on event_orclone"
             )
         ]

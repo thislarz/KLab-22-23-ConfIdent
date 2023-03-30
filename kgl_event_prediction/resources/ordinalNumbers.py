@@ -6,7 +6,7 @@ class OrdinalNumbers(object):
             'sixth', 'seventh', 'eighth', 'ninth', 'tenth',
             'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth',
             'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twenty',
-            'thirty', 'forty'
+            'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'
         ]
 
     def get_ordnial(self, number: int):

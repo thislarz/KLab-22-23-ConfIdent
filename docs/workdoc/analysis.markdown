@@ -194,6 +194,9 @@ We seem to have 5% to 20% written numerals in the titles. Is annoying but okay t
 
 Since it is 2023 we have to look at last 3 years.
 
+### event_orclone analysis now called various analysis (29.03.23)
+
+{'total_events': 9915, 'fake_homepages': 1543, 'empty_titles': 899, 'acronyms_doubled': 3517, 'numerals': 561}
 ---
 
 ### event_orclone acronym matchings (19.01.23)
@@ -285,3 +288,14 @@ event_orclone series by acronym
 series with url = 3774
 
 share with 4 digit years = 41,5739%
+
+### homepage analysis acronyms are check case-insensitive (29.03.2023)
+
+event_orclone by acronym
+
+{'count_series': 3987, 'count_year_4dig': 1568, 'count_year_2dig': 79, 'count_acronym': 2945, 'empty_series': 0, 'no_urls': 216}
+
+event_wikidata by acronym
+
+{'count_series': 1959, 'count_year_4dig': 67, 'count_year_2dig': 4, 'count_acronym': 73, 'empty_series': 0, 'no_urls': 1873}
+

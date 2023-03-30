@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from kgl_event_prediction.Evaluator.eventEvaluator import EventEvaluator
 from kgl_event_prediction.Predictors.eventPredictor import EventPredictor
 from kgl_event_prediction.db_util import DbUtil
@@ -7,17 +9,18 @@ from kgl_event_prediction.utils import *
 
 class MultiGuessEventPredictor(EventPredictor):
 
-    def __init__(self, series_list = [], prediction_iterations : int = 5):
+    def __init__(self, series_list = [], earliest_year=None, prediction_iterations : int = 5):
         super().__init__()
         self.prediction_iterations = prediction_iterations
-        self.initialize(series_list)
+        self.initialize(series_list, earliest_year)
 
-    def initialize(self, series_list):
+    def initialize(self, series_list, earliest_year = None):
         """
         :param series_list: list of Events from a given Series for which the next shall be guessed;
-
+        :param earliest_year: doesn't do anything just for show so far
         This method should be used when the guess should be performed on a new series
         """
+        self.earliest_year = datetime.now().year if earliest_year is None else earliest_year
         self.series_list = series_list
 
         # updates the class attributes

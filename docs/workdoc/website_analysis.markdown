@@ -25,6 +25,26 @@ Failed:  2848
 
 Success:  4790
 
+### Full set analysis event_wikidata 30.03.2023 1s timeout
+
+Forbidden:  55
+
+Not reachable:  12
+
+Failed:  120
+
+Success:  688
+
+### Full set analysis event_orclone 30.03.2023 1s timeout
+
+Forbidden:  582
+
+Not reachable:  469
+
+Failed:  1994
+
+Success:  5255
+
 ### Header extract 23.02.23
 
 There are 4790 entries not null in column "url"

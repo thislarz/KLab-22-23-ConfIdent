@@ -54,3 +54,10 @@ Next event of: AAL 2008 "Acquisition of African Languages" takes place in the ye
 False
 
 //should update all years in title
+
+
+###
+
+good presentation examples
+
+ComNet

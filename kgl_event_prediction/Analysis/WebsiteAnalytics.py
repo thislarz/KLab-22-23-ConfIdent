@@ -11,7 +11,7 @@ from kgl_event_prediction.db_util import DbUtil
 class WebsiteAnalytics(object):
 
     @staticmethod
-    def retrieve_website_list(website_list: list):
+    def retrieve_website_list(website_list: list, timeout: float = 1):
         """
         @param website_list: list of urls to be retrieved
         @return: list of dict with keys url and res where res contains the html content of said url
@@ -35,7 +35,7 @@ class WebsiteAnalytics(object):
             i += 1
 
             try:
-                res = WebsiteAnalytics.retrieve_website(url)
+                res = WebsiteAnalytics.retrieve_website(url, timeout)
             except:
                 failed_list.append(url)
                 continue
@@ -57,8 +57,7 @@ class WebsiteAnalytics(object):
         return retrieved_websites
 
     @staticmethod
-    def retrieve_website(url: str):
-        timeout = 0.5
+    def retrieve_website(url: str, timeout: float = 1):
         res = requests.get(url, timeout=timeout)
         event_page = BeautifulSoup(res.text, "html.parser")
         return event_page
@@ -121,7 +120,7 @@ class WebsiteAnalytics(object):
         try:
             title = html_text.head.title.text
         except:
-            print(html_text)
+            # print(html_text)
             return True
 
         if title.find("403") != -1:
@@ -239,8 +238,16 @@ class WebsiteAnalytics(object):
 
 
 if __name__ == '__main__':
-    data = WebsiteAnalytics.load_data_from_json()
-    WebsiteAnalytics.extract_specific_head_data_to_file(data)
-
+    query = """
+    SELECT homepage
+    FROM "event_orclone"
+    WHERE homepage IS NOT NULL
+    """
+    web_list = DbUtil('event_orclone').query_corpus_db(query)
+    print(web_list[0])
+    temp = []
+    for url in web_list:
+        temp.append(url['homepage'])
+    WebsiteAnalytics.retrieve_website_list(temp, 1)
 
 

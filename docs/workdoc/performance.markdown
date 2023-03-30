@@ -67,6 +67,18 @@ Success* (based on 3.79% websites): 0.3699
 
 {'total_events': 200, 'empty_series': 0, 'title_similarity': [68, 8, 18, 26, 31, 16, 3, 2, 2, 0, 3, 1, 1, 2, 3, 4, 2, 5, 4, 1], 'year_checks': 15, 'acronym_checks': 136, 'verdicts': [12, 124, 0, 64]}
 
-#### Simple Event Predictor on orclone by acronym (29.03.2023) threshold 0.8
+#### Simple Event Predictor on wikidata by acronym (29.03.2023) threshold 0.8
 
 {'total_events': 1959, 'empty_series': 0, 'title_similarity': [1897, 1, 9, 8, 7, 3, 5, 2, 1, 1, 1, 0, 2, 3, 4, 2, 5, 1, 3, 4], 'year_checks': 27, 'acronym_checks': 62, 'verdicts': [11, 51, 0, 1897]}
+
+#### Simple Event Predictor on orclone by acronym (29.03.2023) threshold 0.8
+
+{'total_events': 3987, 'empty_series': 0, 'title_similarity': [1467, 136, 355, 497, 410, 266, 126, 73, 52, 43, 40, 36, 35, 50, 51, 55, 88, 81, 70, 56], 'year_checks': 323, 'acronym_checks': 2562, 'verdicts': [290, 2272, 0, 1425]}
+
+#### MGEP on wikidata by acronym (29.03.2023) threshold 0.8
+
+{'total_events': 1959, 'empty_series': 0, 'title_similarity': [1892, 1, 4, 9, 9, 6, 5, 2, 0, 1, 1, 2, 2, 4, 3, 2, 5, 1, 4, 6], 'year_checks': 36, 'acronym_checks': 67, 'verdicts': [16, 51, 0, 1892]}
+
+#### MGEP on orclone by acronym (29.03.2023) threshold 0.8
+
+{'total_events': 3987, 'empty_series': 0, 'title_similarity': [1417, 116, 349, 496, 424, 288, 149, 73, 59, 45, 36, 38, 39, 48, 44, 54, 96, 93, 68, 55], 'year_checks': 531, 'acronym_checks': 2612, 'verdicts': [304, 2308, 0, 1375]}

@@ -126,8 +126,8 @@ class DbUtil(object):
         series_count = 0
         for x in series_dict.keys():
             series_count += 1
-            print(x)
-            print(tabulate(series_dict[x], headers="keys"))
+            # print(x)
+            # print(tabulate(series_dict[x], headers="keys"))
 
         print(series_count, " series count")
         print(acronym_not_string, " acronym not string")

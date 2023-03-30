@@ -1,6 +1,7 @@
 import dataclasses
 import json
 import pathlib
+import sqlite3
 from datetime import time
 from logging import Logger, DEBUG, StreamHandler
 from tabulate import tabulate
@@ -87,7 +88,7 @@ class SeriesAnalysis(object):
                     url_containing_year_4dig += 1
                 elif url.find(str(short_year)) != -1:
                     url_containing_year_2dig += 1
-                if type(acro_striped) is str and url.find(acro_striped) != -1:
+                if type(acro_striped) is str and url.upper().find(acro_striped.upper()) != -1:
                     url_containing_striped_acronym += 1
             else:
                 empty_series += 1
@@ -320,14 +321,13 @@ class SeriesAnalysis(object):
         return res
 
     @staticmethod
-    def or_analytics(last_years: int):
+    def various_analytics(event_list):
         print("--------------------------")
-        db = DbUtil("event_orclone")
-        res = db.get_last_x_events(last_years)
+        res = event_list
         total_events = len(res)
         print(res[0])
 
-        print(total_events, " Events in last", last_years, " years")
+        print(total_events, "total number of Events")
 
         # detect bad data
         fake_hp = []
@@ -359,7 +359,7 @@ class SeriesAnalysis(object):
         print(numeral_count, " at least events have a written numeral in title.", len(res), " total events")
 
         # will return a list of series
-        db.group_by_acronym(res)
+        # db.group_by_acronym(res)
 
         res_dict = {
             "total_events": total_events,
@@ -368,6 +368,7 @@ class SeriesAnalysis(object):
             "acronyms_doubled": acronym_doubles,
             "numerals": numeral_count
         }
+        print(res_dict)
         return res_dict
 
     @staticmethod
@@ -406,8 +407,9 @@ class SeriesAnalysis(object):
 
         snippet_list = text.split(' ')
         for snippet in snippet_list:
-            if snippet in ord_list:
-                return True
+            for ord in ord_list:
+                if ord in snippet:
+                    return True
         return False
 
 
@@ -418,6 +420,8 @@ class SeriesAnalysis(object):
         checks if the url includes terms that are associated with alternative event references
         """
         fakes = ["elsevier", "springer", "inderscience", "dblp", "wikicfp.com"]
+        if type(url) != str:
+            return False
         for f in fakes:
             if url.find(f) != -1:
                 return False
@@ -500,15 +504,41 @@ class SeriesAnalysis(object):
         return res_dict
 
     @staticmethod
+    def count_columns_of_interest(table: str):
+        columns = [
+            "acronym",
+            "inEventSeries",
+            "eventInSeries",
+            "eventInSeriesId",
+            "doi",
+            "country",
+            "city",
+            "location",
+            "year",
+            "homepage",
+            "ordinal",
+            "title",
+            "eventType",
+        ]
+        for i in columns:
+            try:
+                res = SeriesAnalysis.count_column_in_table(table,i)
+            except sqlite3.OperationalError:
+                res = None
+            print(i, ",", SeriesAnalysis.count_column_in_table(table,i))
+
+    @staticmethod
     def count_column_in_table(table: str, column: str):
         """
         counts entries in a specific column of a dataset (where that column is not NULL)
         """
-        query = open("../resources/queries/countSeriesVariable.sql").read()
-        query = replace_var_in_sql(query, "VARIABLE1", column)
-        query = replace_var_in_sql(query, "VARIABLE2", table)
-        return DbUtil.query_corpus_db(query)[0]["COUNT("+column+")"]
-
+        try:
+            query = open("../resources/queries/countSeriesVariable.sql").read()
+            query = replace_var_in_sql(query, "VARIABLE1", column)
+            query = replace_var_in_sql(query, "VARIABLE2", table)
+            return DbUtil.query_corpus_db(query)[0]["COUNT("+column+")"]
+        except sqlite3.OperationalError:
+            return 0
     @staticmethod
     def save_to_json(res: dict, name: str, folder_name : str = "", append: bool = True):
         """
@@ -552,6 +582,23 @@ class SeriesAnalysis(object):
 
 
 if __name__ == '__main__':
+    """
+    print("-----------Wikidata-------------")
+    SeriesAnalysis.count_columns_of_interest('event_wikidata')
+    print("-----------Orclone-------------")
+    SeriesAnalysis.count_columns_of_interest('event_orclone')
+    """
+    """
+    sa = SeriesAnalysis()
+    sa.load_series("series_id", "event_wikidata")
+    sa.homepage_analytics()
+    """
+    """
+    db = DbUtil('event_wikidata')
+    list = db.get_all_events()
+    SeriesAnalysis.various_analytics(list)
+    """
+
     cases = [
         (
             "acronym",
@@ -584,7 +631,7 @@ if __name__ == '__main__':
     ]
 
     sa = SeriesAnalysis()
-    for acro, tabel, ep, threshold, save_file in [cases[1]]:
+    for acro, tabel, ep, threshold, save_file in [cases[3]]:
         sa.load_series(acro, tabel)
         sa.rate_event_prediction(event_predictor=ep, threshold=threshold,
                                  save_file=save_file, save=True, starting_point=0)
